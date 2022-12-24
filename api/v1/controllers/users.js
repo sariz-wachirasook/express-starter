@@ -5,7 +5,9 @@ const prisma = require('../configs/prisma');
 module.exports = {
   create: async (req, res, next) => {
     try {
-      const { name, email, password } = req.body;
+      let { name, email, password } = req.body;
+
+      email = email.toLowerCase();
 
       if (!name || !email || !password) {
         return res.status(400).send({ message: 'All fields are required' });
@@ -29,9 +31,16 @@ module.exports = {
           email: email,
           password: hashedPassword,
         },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          createdAt: true,
+          role: true,
+        },
       });
 
-      res.send({ message: 'User created successfully', data });
+      res.send(data);
     } catch (err) {
       next(err);
     }
@@ -52,6 +61,7 @@ module.exports = {
           name: true,
           email: true,
           createdAt: true,
+          role: true,
           profile: {
             select: {
               id: true,
@@ -68,6 +78,27 @@ module.exports = {
 
   getOne: async (req, res, next) => {
     try {
+      const { id } = req.params;
+
+      const data = await prisma.user.findUnique({
+        where: {
+          id: parseInt(id),
+        },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          createdAt: true,
+          role: true,
+          profile: {
+            select: {
+              id: true,
+            },
+          },
+        },
+      });
+
+      res.send(data);
     } catch (err) {
       next(err);
     }

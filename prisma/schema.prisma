@@ -12,8 +12,9 @@ datasource db {
 
 model User {
   id            Int             @id @default(autoincrement())
-  name          String
   email         String          @unique
+  // NOTE: you don't need a name if you have a profile with a first and last name
+  name          String
   password      String
   role          Role            @default(USER)
   createdAt     DateTime        @default(now())
@@ -21,12 +22,16 @@ model User {
   passwordReset PasswordReset[]
   socialLogin   SocialLogin[]
   profile       Profile?
+
+  @@index([email], name: "email")
+  @@map(name: "user")
 }
 
 model Profile {
   id          Int     @id @default(autoincrement())
   user        User    @relation(fields: [userId], references: [id])
   userId      Int     @unique
+  // NOTE: you don't need a first and last name if you have a name on the user
   firstName   String?
   lastName    String?
   address     String?
@@ -34,6 +39,8 @@ model Profile {
   state       String?
   zipCode     String?
   phoneNumber String?
+
+  @@map(name: "profile")
 }
 
 model PasswordReset {
@@ -43,6 +50,8 @@ model PasswordReset {
   token     String
   expiresAt DateTime
   createdAt DateTime @default(now())
+
+  @@map(name: "password_reset")
 }
 
 model SocialLogin {
@@ -52,6 +61,8 @@ model SocialLogin {
   provider   String
   providerId String
   createdAt  DateTime @default(now())
+
+  @@map(name: "social_login")
 }
 
 enum Role {
