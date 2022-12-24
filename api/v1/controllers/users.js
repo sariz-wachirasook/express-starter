@@ -2,6 +2,34 @@ const bcrypt = require('bcrypt');
 const { getPagination, monthDayYearFormat, getCSV, getXLSX } = require('../utils/utils');
 const prisma = require('../configs/prisma');
 
+
+const selectList = {
+  select: {
+    id: true,
+    email: true,
+    name: true,
+    createdAt: true,
+    role: true,
+  },
+};
+
+const selectDetail = {
+  select: {
+    id: true,
+    email: true,
+    name: true,
+    createdAt: true,
+    role: true,
+    profile: {
+      select: {
+        firstName: true,
+        lastName: true,
+        gender: true,
+      },
+    },
+  },
+};
+
 module.exports = {
   create: async (req, res, next) => {
     try {
@@ -31,13 +59,7 @@ module.exports = {
           email: email,
           password: hashedPassword,
         },
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          createdAt: true,
-          role: true,
-        },
+        ...selectList,
       });
 
       res.send(data);
@@ -56,18 +78,7 @@ module.exports = {
         orderBy: {
           createdAt: 'desc',
         },
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          createdAt: true,
-          role: true,
-          profile: {
-            select: {
-              id: true,
-            },
-          },
-        },
+        ...selectList,
       });
 
       res.send({ total, data });
@@ -84,18 +95,7 @@ module.exports = {
         where: {
           id: parseInt(id),
         },
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          createdAt: true,
-          role: true,
-          profile: {
-            select: {
-              id: true,
-            },
-          },
-        },
+        ...selectDetail,
       });
 
       res.send(data);
@@ -116,11 +116,7 @@ module.exports = {
         orderBy: {
           createdAt: 'desc',
         },
-        select: {
-          name: true,
-          email: true,
-          createdAt: true,
-        },
+        ...selectList,
       });
 
       const flattenedData = data.map((item) => ({
@@ -131,7 +127,7 @@ module.exports = {
 
       switch (format) {
         case 'xlsx':
-          const workbook = getXLSX(flattenedData, ['Name', 'Email', 'Created At']);
+          const workbook = getXLSX(flattenedData, ['Email', 'Name', 'Created At']);
           res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
           res.setHeader('Content-Disposition', 'attachment; filename=users.xlsx');
           res.send(workbook);
@@ -140,8 +136,8 @@ module.exports = {
         case 'csv':
         default:
           const csv = getCSV(flattenedData, [
-            { id: 'name', title: 'Name' },
             { id: 'email', title: 'Email' },
+            { id: 'name', title: 'Name' },
             { id: 'createdAt', title: 'Created At' },
           ]);
           res.setHeader('Content-Disposition', 'attachment; filename=users.csv');
@@ -156,13 +152,30 @@ module.exports = {
 
   update: async (req, res, next) => {
     try {
-    } catch (err) {
-      next(err);
-    }
-  },
+      const { id } = req.params;
 
-  delete: async (req, res, next) => {
-    try {
+      const { firstName } = req.body;
+
+      const data = await prisma.user.update({
+        where: {
+          id: parseInt(id),
+        },
+        data: {
+          profile: {
+            upsert: {
+              create: {
+                firstName: firstName,
+              },
+              update: {
+                firstName: firstName,
+              },
+            },
+          },
+        },
+        ...selectDetail,
+      });
+
+      res.send(data);
     } catch (err) {
       next(err);
     }

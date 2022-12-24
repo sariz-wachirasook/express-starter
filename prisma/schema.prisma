@@ -39,6 +39,7 @@ model Profile {
   state       String?
   zipCode     String?
   phoneNumber String?
+  gender      Gender? @default(u)
 
   @@map(name: "profile")
 }
@@ -68,4 +69,10 @@ model SocialLogin {
 enum Role {
   ADMINISTRATOR
   USER
+}
+
+enum Gender {
+  u
+  m
+  f
 }
