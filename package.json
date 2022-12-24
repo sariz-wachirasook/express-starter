@@ -1,0 +1,25 @@
+{
+  "author": "Sariz Wachirasook",
+  "description": "Express Starter For Workshop (Express + Prisma + MySQL project)",
+  "license": "MIT",
+  "name": "express-starter",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "nodemon app.js",
+    "schema:update": "prisma generate && prisma db push",
+    "migrate": "prisma migrate save --name init && prisma migrate up",
+    "prisma": "prisma"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20",
+    "prisma": "^4.8.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^4.8.0",
+    "bcrypt": "^5.1.0",
+    "csv-writer": "^1.6.0",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "xlsx": "^0.18.5"
+  }
+}
