@@ -4,6 +4,13 @@
 
 ---
 
+```shell
+# (can also use yarn or npm)
+pnpm install
+pnpm schema:update
+pnpm dev
+```
+
 ## Key Features
 
 ---
@@ -53,3 +60,20 @@
 - eslint
 - prettier
 - husky
+
+## Where can be deployed?
+
+- [x] Any VPS (Linux) with
+  - Node.js
+  - PM2
+  - Nginx
+  - MySQL
+- [x] Other SAAS
+  - [x] AWS
+  - [x] Azure
+  - [x] Heroku
+  - [x] Digital Ocean
+  - [x] Google Cloud
+  - [x] Linode
+  - [x] Netlify
+  

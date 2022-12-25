@@ -6,6 +6,7 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "nodemon app.js",
+    "start": "node app.js",
     "schema:update": "prisma generate && prisma db push",
     "migrate": "prisma migrate save --name init && prisma migrate up",
     "prisma": "prisma",
