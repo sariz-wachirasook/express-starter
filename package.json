@@ -9,6 +9,7 @@
     "schema:update": "prisma generate && prisma db push",
     "migrate": "prisma migrate save --name init && prisma migrate up",
     "prisma": "prisma",
+    "husky:prepare": "husky install",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
