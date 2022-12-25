@@ -28,6 +28,7 @@ pnpm dev
 
 - crud cms pages
 - slugify
+- average reading time
 - seo
 
 ### 3. Export System

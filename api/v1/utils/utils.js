@@ -1,11 +1,24 @@
 const createCsvWriter = require('csv-writer').createObjectCsvStringifier;
 const XLSX = require('xlsx');
+const { JSDOM } = require('jsdom');
 
 module.exports = {
   getPagination: (query) => ({
     skip: parseInt((query.page - 1) * query.perPage, 10) || 0,
     take: parseInt(query.perPage, 10) || 10,
   }),
+
+  // NOTE: ceil 1 - 200 words to 1 minute
+  getAverageReadingSpeed: (text) => {
+    const html = `<div id="editor">${text}</div>`;
+    const dom = new JSDOM(html);
+    const editorContent = dom.window.document.getElementById('editor').innerHTML;
+
+    const words = editorContent.split(' ').length;
+    const minutes = words / 200;
+
+    return Math.ceil(minutes);
+  },
 
   monthDayYearFormat: (d) => {
     if (!d) return 'N/A';

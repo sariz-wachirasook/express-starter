@@ -1,4 +1,10 @@
-const { getPagination, monthDayYearFormat, getXLSX, getCSV } = require('../utils/utils');
+const {
+  getPagination,
+  monthDayYearFormat,
+  getXLSX,
+  getCSV,
+  getAverageReadingSpeed,
+} = require('../utils/utils');
 const prisma = require('../configs/prisma');
 const slugify = require('../configs/slugify');
 const { notFoundMessage } = require('../messages/systemMessages');
@@ -8,6 +14,7 @@ const selectList = {
     id: true,
     slug: true,
     title: true,
+    readTime: true,
     createdAt: true,
     createdBy: true,
   },
@@ -19,6 +26,7 @@ const selectDetail = {
     slug: true,
     title: true,
     content: true,
+    readTime: true,
     metaTitle: true,
     metaDescription: true,
     metaKeywords: true,
@@ -49,6 +57,8 @@ module.exports = {
         newSlug = `${newSlug}-${Date.now()}`;
       }
 
+      const readTime = getAverageReadingSpeed(content);
+
       const data = await prisma.page.create({
         data: {
           slug: newSlug,
@@ -56,6 +66,7 @@ module.exports = {
           content,
           createdBy: email,
           updatedBy: email,
+          readTime,
           metaTitle,
           metaDescription,
           metaKeywords,
@@ -206,6 +217,8 @@ module.exports = {
 
       if (!existingPage) return res.status(404).send({ message: notFoundMessage });
 
+      const readTime = getAverageReadingSpeed(content);
+
       const data = await prisma.page.update({
         where: {
           slug,
@@ -213,6 +226,7 @@ module.exports = {
         data: {
           title,
           content,
+          readTime,
           metaTitle,
           metaDescription,
           updatedBy: email,
