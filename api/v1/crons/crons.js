@@ -1,4 +1,5 @@
 const cron = require('cron');
+const { deleteUser } = require('../commands/users');
 
 const methods = {
   runEveryMinute: () => {
@@ -26,8 +27,10 @@ const methods = {
   },
 
   runEveryDayAtMidnight: () => {
-    const job = new cron.CronJob('0 0 0 * * *', () => {
+    const job = new cron.CronJob('0 0 0 * * *', async () => {
       console.log('Cron Running every day at midnight', new Date());
+
+      await deleteUser();
     });
 
     job.start();

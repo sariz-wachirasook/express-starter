@@ -1,16 +1,16 @@
-const roles = ['ADMINISTRATOR', 'USER'];
+// role hierarchy
+const roles = {
+  ADMINISTRATOR: ['ADMINISTRATOR', 'MANAGER', 'USER'], // admin can access admin, manager, and user routes
+  MANAGER: ['MANAGER', 'USER'], // manager can access manager and user routes
+  USER: ['USER'], // user can access user routes
+};
 
 function roleMiddleware(role) {
   return (req, res, next) => {
-    if (req.user && req.user.role && roles.includes(req.user.role)) {
-      if (req.user.role === role) {
-        next();
-      } else {
-        res.status(401).send({ error: 'Unauthorized' });
-      }
-    } else {
-      res.status(401).send({ error: 'Unauthorized' });
-    }
+    const { user } = req;
+    if (!user) return res.status(401).send({ message: 'Unauthorized' });
+    if (roles[user.role].includes(role)) return next();
+    return res.status(403).send({ message: 'Forbidden' });
   };
 }
 

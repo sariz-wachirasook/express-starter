@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt');
 const { getPagination, monthDayYearFormat, getCSV, getXLSX } = require('../utils/utils');
 const prisma = require('../configs/prisma');
+const { notFoundMessage } = require('../messages/systemMessages');
+const sendInformSoftDeleteAccountEmail = require('../mails/sendInformSoftDeleteAccountEmail');
 
 const selectList = {
   select: {
@@ -18,6 +20,7 @@ const selectDetail = {
     email: true,
     name: true,
     createdAt: true,
+    deletedAt: true,
     role: true,
     profile: {
       select: {
@@ -101,9 +104,11 @@ module.exports = {
         ...selectDetail,
       });
 
-      res.send(data);
+      if (!data) return res.status(404).send({ message: notFoundMessage });
+
+      return res.send(data);
     } catch (err) {
-      next(err);
+      return next(err);
     }
   },
 
@@ -194,6 +199,33 @@ module.exports = {
       });
 
       res.send(data);
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  requestSoftDelete: async (req, res, next) => {
+    try {
+      const { id } = req.params;
+
+      const today = new Date();
+
+      // next 30 days start from 12:00 AM
+      const next30Day = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 30);
+
+      const data = await prisma.user.update({
+        where: {
+          id: parseInt(id, 10),
+        },
+        data: {
+          deletedAt: next30Day,
+        },
+        ...selectDetail,
+      });
+
+      sendInformSoftDeleteAccountEmail(data.email, data.name, next30Day);
+
+      res.send({ message: 'Request soft delete successfully' });
     } catch (err) {
       next(err);
     }

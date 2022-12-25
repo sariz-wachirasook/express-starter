@@ -1,10 +1,4 @@
-const {
-  nodeEnv,
-  mailFallback,
-  resetPasswordURL,
-  resetPasswordExpires,
-  appName,
-} = require('../configs/env');
+const { resetPasswordURL, resetPasswordExpires, appName } = require('../configs/env');
 const sendEmail = require('../configs/nodemailer');
 
 module.exports = (email, name, token) => {
@@ -19,6 +13,5 @@ module.exports = (email, name, token) => {
     <p>${appName} Team</p>
   `;
 
-  if (nodeEnv === 'production') sendEmail(email, subject, html);
-  else sendEmail(mailFallback, subject, html);
+  sendEmail(email, subject, html);
 };

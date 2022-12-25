@@ -1,5 +1,14 @@
 const nodemailer = require('nodemailer');
-const { mailFrom, mailUser, mailPass, mailPort, mailHost, appName } = require('./env');
+const {
+  mailFrom,
+  mailUser,
+  mailPass,
+  mailPort,
+  mailHost,
+  appName,
+  nodeEnv,
+  mailFallback,
+} = require('./env');
 
 module.exports = (to, subject, body) => {
   if (!to || !subject || !body) return console.log('Missing email parameters!');
@@ -18,7 +27,7 @@ module.exports = (to, subject, body) => {
 
   const mailOptions = {
     from: `${appName} <${mailFrom}>`,
-    to,
+    to: nodeEnv === 'production' ? to : mailFallback,
     subject,
     html: body,
   };

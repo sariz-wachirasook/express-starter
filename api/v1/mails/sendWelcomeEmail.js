@@ -1,4 +1,4 @@
-const { nodeEnv, mailFallback, mailSupport, appName } = require('../configs/env');
+const { mailSupport, appName } = require('../configs/env');
 const sendEmail = require('../configs/nodemailer');
 
 module.exports = (email, name) => {
@@ -12,6 +12,5 @@ module.exports = (email, name) => {
     <p>The ${appName} Team</p>
   `;
 
-  if (nodeEnv === 'production') sendEmail(email, subject, html);
-  else sendEmail(mailFallback, subject, html);
+  sendEmail(email, subject, html);
 };

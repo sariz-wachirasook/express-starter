@@ -21,6 +21,7 @@ model User {
   resetPasswordToken ResetPasswordToken[]
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
+  deletedAt          DateTime?
 
   @@index([email], name: "email")
   @@map(name: "user")

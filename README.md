@@ -22,6 +22,7 @@ pnpm dev
 - user register
 - user refresh token
 - user reset password
+- user soft delete
 - user roles and permissions (RBAC)
 
 ### 2. CMS System

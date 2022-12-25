@@ -128,13 +128,9 @@ module.exports = {
 
   dataExport: async (req, res, next) => {
     try {
-      const pagination = getPagination(req.query);
-      const where = {};
       const { format } = req.query;
 
       const data = await prisma.page.findMany({
-        ...pagination,
-        where,
         orderBy: {
           createdAt: 'desc',
         },
@@ -145,6 +141,7 @@ module.exports = {
         slug: item.slug,
         title: item.title,
         content: item.content,
+        readTime: item.readTime,
         metaTitle: item.metaTitle,
         metaDescription: item.metaDescription,
         metaKeywords: item.metaKeywords,
@@ -160,6 +157,7 @@ module.exports = {
             'Slug',
             'Title',
             'Content',
+            'Read Time',
             'Meta Title',
             'Meta Description',
             'Meta Keywords',
@@ -182,6 +180,7 @@ module.exports = {
             { id: 'slug', title: 'Slug' },
             { id: 'title', title: 'Title' },
             { id: 'content', title: 'Content' },
+            { id: 'readTime', title: 'Read Time' },
             { id: 'metaTitle', title: 'Meta Title' },
             { id: 'metaDescription', title: 'Meta Description' },
             { id: 'metaKeywords', title: 'Meta Keywords' },
