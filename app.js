@@ -1,4 +1,5 @@
 const express = require('express');
+
 const app = express();
 const port = 8000;
 
@@ -12,12 +13,15 @@ app.use('/api/v1/users', users);
 
 app.get('/', (req, res) => {
   res.send({
+    '/api/v1/auth/login': 'POST',
+    '/api/v1/auth/register': 'POST',
+
     '/api/v1/users': 'GET, POST',
-    '/api/v1/users/:id': 'GET, PUT, DELETE',
     '/api/v1/users/export': 'GET',
+    '/api/v1/users/:id': 'GET, PUT, DELETE',
   });
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`app listening on port ${port}`);
 });

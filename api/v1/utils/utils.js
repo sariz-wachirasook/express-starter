@@ -2,12 +2,10 @@ const createCsvWriter = require('csv-writer').createObjectCsvStringifier;
 const XLSX = require('xlsx');
 
 module.exports = {
-  getPagination: (query) => {
-    return {
-      skip: parseInt((query.page - 1) * query.perPage) || 0,
-      take: parseInt(query.perPage) || 10,
-    };
-  },
+  getPagination: (query) => ({
+    skip: parseInt((query.page - 1) * query.perPage, 10) || 0,
+    take: parseInt(query.perPage, 10) || 10,
+  }),
 
   monthDayYearFormat: (d) => {
     if (!d) return 'N/A';

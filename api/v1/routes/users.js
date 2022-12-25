@@ -1,5 +1,7 @@
 const router = require('express').Router();
-const { getAll, create, dataExport, getOne, update } = require('../controllers/users');
+const {
+  getAll, create, dataExport, getOne, update,
+} = require('../controllers/users');
 const errorHandler = require('../middleware/errorHandler');
 
 router.get('/', getAll, errorHandler);

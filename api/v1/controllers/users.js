@@ -2,7 +2,6 @@ const bcrypt = require('bcrypt');
 const { getPagination, monthDayYearFormat, getCSV, getXLSX } = require('../utils/utils');
 const prisma = require('../configs/prisma');
 
-
 const selectList = {
   select: {
     id: true,
@@ -33,7 +32,8 @@ const selectDetail = {
 module.exports = {
   create: async (req, res, next) => {
     try {
-      let { name, email, password } = req.body;
+      let { email } = req.body;
+      const { name, password } = req.body;
 
       email = email.toLowerCase();
 
@@ -43,7 +43,7 @@ module.exports = {
 
       const existingUser = await prisma.user.findUnique({
         where: {
-          email: email,
+          email,
         },
       });
 
@@ -55,16 +55,16 @@ module.exports = {
 
       const data = await prisma.user.create({
         data: {
-          name: name,
-          email: email,
+          name,
+          email,
           password: hashedPassword,
         },
         ...selectList,
       });
 
-      res.send(data);
+      return res.send(data);
     } catch (err) {
-      next(err);
+      return next(err);
     }
   },
 
@@ -93,7 +93,7 @@ module.exports = {
 
       const data = await prisma.user.findUnique({
         where: {
-          id: parseInt(id),
+          id: parseInt(id, 10),
         },
         ...selectDetail,
       });
@@ -126,15 +126,15 @@ module.exports = {
       }));
 
       switch (format) {
-        case 'xlsx':
+        case 'xlsx': {
           const workbook = getXLSX(flattenedData, ['Email', 'Name', 'Created At']);
           res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
           res.setHeader('Content-Disposition', 'attachment; filename=users.xlsx');
           res.send(workbook);
           break;
-
+        }
         case 'csv':
-        default:
+        default: {
           const csv = getCSV(flattenedData, [
             { id: 'email', title: 'Email' },
             { id: 'name', title: 'Name' },
@@ -144,6 +144,7 @@ module.exports = {
           res.setHeader('Content-Type', 'text/csv');
           res.send(csv);
           break;
+        }
       }
     } catch (err) {
       next(err);
@@ -158,16 +159,16 @@ module.exports = {
 
       const data = await prisma.user.update({
         where: {
-          id: parseInt(id),
+          id: parseInt(id, 10),
         },
         data: {
           profile: {
             upsert: {
               create: {
-                firstName: firstName,
+                firstName,
               },
               update: {
-                firstName: firstName,
+                firstName,
               },
             },
           },
