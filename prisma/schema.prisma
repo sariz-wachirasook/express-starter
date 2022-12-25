@@ -79,6 +79,7 @@ model Page {
   slug            String   @unique
   title           String
   content         String   @db.Text()
+  readTime        Int      @default(0)
   metaTitle       String?
   metaDescription String?  @db.Text()
   metaKeywords    String?
