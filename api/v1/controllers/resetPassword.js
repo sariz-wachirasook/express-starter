@@ -9,6 +9,7 @@ const {
   JWTRefreshTokenExpires,
   resetPasswordExpires,
 } = require('../configs/env');
+const sendRequestResetPasswordEmail = require('../mails/sendRequestResetPasswordEmail');
 
 module.exports = {
   requestResetPassword: async (req, res, next) => {
@@ -36,9 +37,11 @@ module.exports = {
         },
       });
 
+      const token = crypto.randomBytes(32).toString('hex');
+
       await prisma.resetPasswordToken.create({
         data: {
-          token: crypto.randomBytes(32).toString('hex'),
+          token,
           expiresAt: new Date(new Date().getTime() + parseInt(resetPasswordExpires, 10)),
           user: {
             connect: {
@@ -47,6 +50,8 @@ module.exports = {
           },
         },
       });
+
+      sendRequestResetPasswordEmail(user.email, user.name, token);
 
       return res.status(200).send({ message: 'A request has been sent' });
     } catch (err) {
