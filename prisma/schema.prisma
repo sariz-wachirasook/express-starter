@@ -49,15 +49,16 @@ model ResetPasswordToken {
 }
 
 model Profile {
-  id          Int       @id @default(autoincrement())
+  id                     Int       @id @default(autoincrement())
   // NOTE: you don't need a first and last name if you have a name on the user
-  firstName   String?
-  lastName    String?
-  phoneNumber String?
-  birthDate   DateTime?
-  gender      Gender    @default(u)
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      Int       @unique
+  firstName              String?
+  lastName               String?
+  phoneNumber            String?
+  birthDate              DateTime?
+  gender                 Gender    @default(u)
+  isNewsletterSubscribed Boolean   @default(false)
+  user                   User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                 Int       @unique
 
   @@map(name: "profile")
 }

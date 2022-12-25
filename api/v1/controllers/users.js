@@ -7,8 +7,8 @@ const selectList = {
     id: true,
     email: true,
     name: true,
-    createdAt: true,
     role: true,
+    createdAt: true,
   },
 };
 
@@ -24,6 +24,9 @@ const selectDetail = {
         firstName: true,
         lastName: true,
         gender: true,
+        birthDate: true,
+        phoneNumber: true,
+        isNewsletterSubscribed: true,
       },
     },
   },
@@ -128,7 +131,10 @@ module.exports = {
       switch (format) {
         case 'xlsx': {
           const workbook = getXLSX(flattenedData, ['Email', 'Name', 'Created At']);
-          res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+          res.setHeader(
+            'Content-Type',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          );
           res.setHeader('Content-Disposition', 'attachment; filename=users.xlsx');
           res.send(workbook);
           break;
@@ -155,7 +161,8 @@ module.exports = {
     try {
       const { id } = req.params;
 
-      const { firstName } = req.body;
+      const { firstName, lastName, gender, phoneNumber, birthDate } = req.body;
+      const { isNewsletterSubscribed } = req.body;
 
       const data = await prisma.user.update({
         where: {
@@ -166,9 +173,19 @@ module.exports = {
             upsert: {
               create: {
                 firstName,
+                lastName,
+                gender: gender || 'u',
+                phoneNumber,
+                birthDate,
+                isNewsletterSubscribed,
               },
               update: {
                 firstName,
+                lastName,
+                gender: gender || 'u',
+                phoneNumber,
+                birthDate,
+                isNewsletterSubscribed,
               },
             },
           },

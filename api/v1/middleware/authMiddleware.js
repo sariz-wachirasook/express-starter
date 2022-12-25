@@ -10,7 +10,7 @@ module.exports = (req, res, next) => {
     const verified = jwt.verify(token, JWTSecret);
 
     req.user = verified;
-    console.log(req.user);
+
     return next();
   } catch (error) {
     return res.status(401).send({ error: 'Invalid token' });
