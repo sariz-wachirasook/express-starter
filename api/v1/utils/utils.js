@@ -3,9 +3,9 @@ const XLSX = require('xlsx');
 const { JSDOM } = require('jsdom');
 
 module.exports = {
-  getPagination: (query) => ({
-    skip: parseInt((query.page - 1) * query.perPage, 10) || 0,
-    take: parseInt(query.perPage, 10) || 10,
+  getPagination: ({ page = 1, perPage = 10 }) => ({
+    skip: parseInt((page - 1) * perPage, 10) || 0,
+    take: parseInt(perPage, 10) || 10,
   }),
 
   // NOTE: ceil 1 - 200 words to 1 minute

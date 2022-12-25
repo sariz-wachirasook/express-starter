@@ -11,6 +11,11 @@ const selectList = {
     name: true,
     role: true,
     createdAt: true,
+    profile: {
+      select: {
+        isNewsletterSubscribed: true,
+      },
+    },
   },
 };
 
@@ -114,13 +119,9 @@ module.exports = {
 
   dataExport: async (req, res, next) => {
     try {
-      const pagination = getPagination(req.query);
-      const where = {};
       const { format } = req.query;
 
       const data = await prisma.user.findMany({
-        ...pagination,
-        where,
         orderBy: {
           createdAt: 'desc',
         },
@@ -131,11 +132,17 @@ module.exports = {
         name: item.name,
         email: item.email,
         createdAt: monthDayYearFormat(item.createdAt),
+        isNewsletterSubscribed: item.profile?.isNewsletterSubscribed ? 'Yes' : 'No',
       }));
 
       switch (format) {
         case 'xlsx': {
-          const workbook = getXLSX(flattenedData, ['Email', 'Name', 'Created At']);
+          const workbook = getXLSX(flattenedData, [
+            'Email',
+            'Name',
+            'Created At',
+            'Subscribed to Newsletter',
+          ]);
           res.setHeader(
             'Content-Type',
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -150,6 +157,7 @@ module.exports = {
             { id: 'email', title: 'Email' },
             { id: 'name', title: 'Name' },
             { id: 'createdAt', title: 'Created At' },
+            { id: 'isNewsletterSubscribed', title: 'Subscribed to Newsletter' },
           ]);
           res.setHeader('Content-Disposition', 'attachment; filename=users.csv');
           res.setHeader('Content-Type', 'text/csv');
