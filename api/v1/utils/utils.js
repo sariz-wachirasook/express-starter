@@ -11,11 +11,13 @@ module.exports = {
     if (!d) return 'N/A';
 
     const date = new Date(d);
-    return date.toLocaleDateString('en-US', {
+    const format = date.toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
       year: 'numeric',
     });
+
+    return format;
   },
 
   getCSV: (data, fields) => {

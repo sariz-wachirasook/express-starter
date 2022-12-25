@@ -74,6 +74,22 @@ model SocialLogin {
   @@map(name: "social_login")
 }
 
+model Page {
+  id              Int      @id @default(autoincrement())
+  slug            String   @unique
+  title           String
+  content         String   @db.Text()
+  metaTitle       String?
+  metaDescription String?  @db.Text()
+  metaKeywords    String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  createdBy       String?
+  updatedBy       String?
+
+  @@map(name: "page")
+}
+
 enum Role {
   ADMINISTRATOR
   USER

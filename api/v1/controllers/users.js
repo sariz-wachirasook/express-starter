@@ -71,7 +71,7 @@ module.exports = {
     }
   },
 
-  getAll: async (req, res, next) => {
+  findMany: async (req, res, next) => {
     try {
       const pagination = getPagination(req.query);
 
@@ -90,7 +90,7 @@ module.exports = {
     }
   },
 
-  getOne: async (req, res, next) => {
+  findUnique: async (req, res, next) => {
     try {
       const { id } = req.params;
 

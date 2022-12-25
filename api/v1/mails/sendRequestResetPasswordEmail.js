@@ -1,7 +1,13 @@
-const { nodeEnv, mailFallback, resetPasswordURL, resetPasswordExpires, appName } = require('../configs/env');
+const {
+  nodeEnv,
+  mailFallback,
+  resetPasswordURL,
+  resetPasswordExpires,
+  appName,
+} = require('../configs/env');
 const sendEmail = require('../configs/nodemailer');
 
-const sendRequestResetPasswordEmail = (email, name, token) => {
+module.exports = (email, name, token) => {
   const subject = 'Reset Your Password';
   const expires = parseInt(resetPasswordExpires, 10);
   const html = `
@@ -16,5 +22,3 @@ const sendRequestResetPasswordEmail = (email, name, token) => {
   if (nodeEnv === 'production') sendEmail(email, subject, html);
   else sendEmail(mailFallback, subject, html);
 };
-
-module.exports = sendRequestResetPasswordEmail;

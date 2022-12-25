@@ -1,9 +1,11 @@
 const nodemailer = require('nodemailer');
 const { mailFrom, mailUser, mailPass, mailPort, mailHost, appName } = require('./env');
 
-const sendEmail = (to, subject, body) => {
+module.exports = (to, subject, body) => {
   if (!to || !subject || !body) return console.log('Missing email parameters!');
-  if (!mailFrom || !mailUser || !mailPass || !mailPort || !mailHost) return console.log('Missing mail config!');
+  if (!mailFrom || !mailUser || !mailPass || !mailPort || !mailHost) {
+    return console.log('Missing mail config!');
+  }
 
   const transporter = nodemailer.createTransport({
     host: mailHost,
@@ -29,5 +31,3 @@ const sendEmail = (to, subject, body) => {
     }
   });
 };
-
-module.exports = sendEmail;
