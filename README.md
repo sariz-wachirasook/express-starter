@@ -1,23 +1,55 @@
-
 # All About The Starter Kit
 
-## Register System Features
+## Node.js + Express + Prisma + MySQL
 
-- login
-- register
-- refresh token
-- reset password
-- roles and permissions (RBAC)
-- administer users crud
-- email services
-  - welcome email
-  - reset password email
+---
 
-## CMS Features
+## Key Features
 
-- cms pages
-- cms page categories
-- cms page seo
-- cms blocks
-- cms block categories
-- cms block seo
+---
+
+### 1. User Management System
+
+- crud users
+- user login
+- user register
+- user refresh token
+- user reset password
+- user roles and permissions (RBAC)
+
+### 2. CMS System
+
+- crud cms pages
+- slugify
+- seo
+
+### 3. Export System
+
+- export users
+  - csv
+  - excel
+- export pages
+  - csv
+  - excel
+
+### 4. Email Templates
+
+- welcome email
+- reset password email
+
+### 5. Cronjobs System
+
+- every 1 minute
+- every 30 minutes
+- every 1 hour
+- every 1 day
+- every 1st day of week
+- every 1st day of month
+
+## Other Developer Tools
+
+---
+
+- eslint
+- prettier
+- husky

@@ -24,16 +24,15 @@ app.get('/', (req, res) => {
     '/api/v1/auth/register': 'POST',
     '/api/v1/auth/refresh-token': 'POST',
 
-    // pages
+    // pages cms
     '/api/v1/pages': 'GET, POST',
-    '/api/v1/pages/import': 'POST',
     '/api/v1/pages/export': 'GET',
-    '/api/v1/pages/:id': 'GET, PUT, DELETE',
+    '/api/v1/pages/:id': 'GET, PATCH, DELETE',
 
     // users
     '/api/v1/users': 'GET, POST',
     '/api/v1/users/export': 'GET',
-    '/api/v1/users/:id': 'GET, PUT',
+    '/api/v1/users/:id': 'GET, PATCH',
 
     // reset password
     '/api/v1/users/reset-password': 'POST',
