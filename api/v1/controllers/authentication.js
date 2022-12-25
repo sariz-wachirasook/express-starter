@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const prisma = require('../configs/prisma');
 const { JWTSecret, JWTRefreshTokenSecret, JWTExpires, JWTRefreshTokenExpires } = require('../configs/env');
+const sendWelcomeEmail = require('../mails/sendWelcomeEmail');
 
 module.exports = {
   login: async (req, res, next) => {
@@ -36,7 +37,7 @@ module.exports = {
       );
       const refreshToken = await prisma.refreshToken.create({
         data: {
-          refreshToken: jwt.sign({ email: user.email }, JWTRefreshTokenSecret, {
+          token: jwt.sign({ email: user.email }, JWTRefreshTokenSecret, {
             expiresIn: JWTRefreshTokenExpires,
           }),
           expiresAt: new Date(date.setDate(date.getDate() + parseInt(JWTRefreshTokenExpires, 10))),
@@ -48,7 +49,7 @@ module.exports = {
         },
       });
 
-      res.send({ token, refreshToken: refreshToken.refreshToken });
+      res.send({ token, refreshToken: refreshToken.token });
     } catch (err) {
       next(err);
     }
@@ -83,6 +84,8 @@ module.exports = {
         },
       });
 
+      sendWelcomeEmail(data.email, data.name);
+
       return res.send(data);
     } catch (err) {
       return next(err);
@@ -95,11 +98,11 @@ module.exports = {
 
       const token = await prisma.refreshToken.findUnique({
         where: {
-          refreshToken,
+          token: refreshToken,
         },
         select: {
           id: true,
-          refreshToken: true,
+          token: true,
           expiresAt: true,
           user: {
             select: {
@@ -124,14 +127,14 @@ module.exports = {
           id: token.id,
         },
         data: {
-          refreshToken: jwt.sign({ email: token.user.email }, JWTRefreshTokenSecret, {
+          token: jwt.sign({ email: token.user.email }, JWTRefreshTokenSecret, {
             expiresIn: JWTRefreshTokenExpires,
           }),
           expiresAt: new Date(date.setDate(date.getDate() + parseInt(JWTRefreshTokenExpires, 10))),
         },
       });
 
-      return res.send({ token: newToken, refreshToken: newRefreshToken.refreshToken });
+      return res.send({ token: newToken, refreshToken: newRefreshToken.token });
     } catch (err) {
       return next(err);
     }

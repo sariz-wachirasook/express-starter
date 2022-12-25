@@ -9,69 +9,66 @@ datasource db {
 }
 
 model User {
-  id            Int             @id @default(autoincrement())
-  email         String          @unique
+  id                 Int                  @id @default(autoincrement())
+  email              String               @unique
   // NOTE: you don't need a name if you have a profile with a first and last name
-  name          String
-  password      String
-  role          Role            @default(USER)
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  passwordReset PasswordReset[]
-  socialLogin   SocialLogin[]
-  profile       Profile?
-  refreshToken  RefreshToken[]
+  name               String
+  password           String
+  role               Role                 @default(USER)
+  profile            Profile?
+  refreshToken       RefreshToken[]
+  socialLogin        SocialLogin[]
+  resetPasswordToken ResetPasswordToken[]
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
 
   @@index([email], name: "email")
   @@map(name: "user")
 }
 
 model RefreshToken {
-  id           Int      @id @default(autoincrement())
-  refreshToken String   @unique
-  user         User     @relation(fields: [userId], references: [id])
-  userId       Int
-  createdAt    DateTime @default(now())
-  expiresAt    DateTime
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  expiresAt DateTime
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  createdAt DateTime @default(now())
 
   @@map(name: "refresh_token")
 }
 
+model ResetPasswordToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  expiresAt DateTime
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  createdAt DateTime @default(now())
+
+  @@map(name: "reset_password_token")
+}
+
 model Profile {
-  id          Int     @id @default(autoincrement())
-  user        User    @relation(fields: [userId], references: [id])
-  userId      Int     @unique
+  id          Int       @id @default(autoincrement())
   // NOTE: you don't need a first and last name if you have a name on the user
   firstName   String?
   lastName    String?
-  address     String?
-  city        String?
-  state       String?
-  zipCode     String?
   phoneNumber String?
-  gender      Gender? @default(u)
+  birthDate   DateTime?
+  gender      Gender    @default(u)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int       @unique
 
   @@map(name: "profile")
 }
 
-model PasswordReset {
-  id        Int      @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id])
-  userId    Int
-  token     String
-  expiresAt DateTime
-  createdAt DateTime @default(now())
-
-  @@map(name: "password_reset")
-}
-
 model SocialLogin {
   id         Int      @id @default(autoincrement())
-  user       User     @relation(fields: [userId], references: [id])
-  userId     Int
   provider   String
   providerId String
   createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     Int
 
   @@map(name: "social_login")
 }
