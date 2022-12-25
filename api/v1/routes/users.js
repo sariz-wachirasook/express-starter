@@ -1,13 +1,13 @@
 const router = require('express').Router();
-const {
-  getAll, create, dataExport, getOne, update,
-} = require('../controllers/users');
+const { getAll, create, dataExport, getOne, update } = require('../controllers/users');
+const authMiddleware = require('../middleware/authMiddleware');
 const errorHandler = require('../middleware/errorHandler');
+const roleMiddleware = require('../middleware/roleMiddleware');
 
-router.get('/', getAll, errorHandler);
-router.get('/export', dataExport, errorHandler);
-router.post('/', create, errorHandler);
-router.get('/:id', getOne, errorHandler);
-router.patch('/:id', update, errorHandler);
+router.get('/', authMiddleware, roleMiddleware('ADMINISTRATOR'), getAll, errorHandler);
+router.get('/export', authMiddleware, dataExport, errorHandler);
+router.post('/', authMiddleware, create, errorHandler);
+router.get('/:id', authMiddleware, getOne, errorHandler);
+router.patch('/:id', authMiddleware, update, errorHandler);
 
 module.exports = router;

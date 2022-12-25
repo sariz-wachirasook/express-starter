@@ -16,6 +16,7 @@ module.exports = {
           id: true,
           email: true,
           password: true,
+          role: true,
         },
       });
 
@@ -25,7 +26,14 @@ module.exports = {
       if (!isPasswordValid) res.status(401).send({ message: 'Invalid email or password' });
 
       const date = new Date();
-      const token = jwt.sign({ email: user.email }, JWTSecret, { expiresIn: JWTExpires });
+      const token = jwt.sign(
+        {
+          email: user.email,
+          role: user.role,
+        },
+        JWTSecret,
+        { expiresIn: JWTExpires },
+      );
       const refreshToken = await prisma.refreshToken.create({
         data: {
           refreshToken: jwt.sign({ email: user.email }, JWTRefreshTokenSecret, {
@@ -66,9 +74,64 @@ module.exports = {
           email,
           password: hashedPassword,
         },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          createdAt: true,
+          role: true,
+        },
       });
 
       return res.send(data);
+    } catch (err) {
+      return next(err);
+    }
+  },
+
+  refreshToken: async (req, res, next) => {
+    try {
+      const { refreshToken } = req.body;
+
+      const token = await prisma.refreshToken.findUnique({
+        where: {
+          refreshToken,
+        },
+        select: {
+          id: true,
+          refreshToken: true,
+          expiresAt: true,
+          user: {
+            select: {
+              id: true,
+              email: true,
+              role: true,
+            },
+          },
+        },
+      });
+
+      if (!token) return res.status(401).send({ message: 'Invalid refresh token' });
+
+      const date = new Date();
+      if (date > token.expiresAt) return res.status(401).send({ message: 'Refresh token expired' });
+
+      const newToken = jwt.sign({ email: token.user.email, role: token.user.role }, JWTSecret, {
+        expiresIn: JWTExpires,
+      });
+      const newRefreshToken = await prisma.refreshToken.update({
+        where: {
+          id: token.id,
+        },
+        data: {
+          refreshToken: jwt.sign({ email: token.user.email }, JWTRefreshTokenSecret, {
+            expiresIn: JWTRefreshTokenExpires,
+          }),
+          expiresAt: new Date(date.setDate(date.getDate() + parseInt(JWTRefreshTokenExpires, 10))),
+        },
+      });
+
+      return res.send({ token: newToken, refreshToken: newRefreshToken.refreshToken });
     } catch (err) {
       return next(err);
     }
