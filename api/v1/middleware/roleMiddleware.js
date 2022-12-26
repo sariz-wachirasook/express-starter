@@ -2,6 +2,7 @@
 const roles = {
   ADMINISTRATOR: ['ADMINISTRATOR', 'MANAGER', 'USER'], // admin can access admin, manager, and user routes
   MANAGER: ['MANAGER', 'USER'], // manager can access manager and user routes
+  EMPLOYEE: ['EMPLOYEE', 'USER'], // employee can access employee and user routes
   USER: ['USER'], // user can access user routes
 };
 

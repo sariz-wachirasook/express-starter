@@ -45,7 +45,7 @@ module.exports = {
 
       let newSlug = slugify(slug || title);
 
-      const existingSlug = await prisma.page.findUnique({
+      const existingSlug = await prisma.blog.findUnique({
         where: {
           slug: newSlug,
         },
@@ -57,7 +57,7 @@ module.exports = {
 
       const readTime = getAverageReadingSpeed(content);
 
-      const data = await prisma.page.create({
+      const data = await prisma.blog.create({
         data: {
           slug: newSlug,
           title,
@@ -82,8 +82,8 @@ module.exports = {
     try {
       const pagination = getPagination(req.query);
 
-      const total = await prisma.page.count();
-      const data = await prisma.page.findMany({
+      const total = await prisma.blog.count();
+      const data = await prisma.blog.findMany({
         ...pagination,
         orderBy: {
           createdAt: 'desc',
@@ -101,7 +101,7 @@ module.exports = {
     try {
       const { slug } = req.params;
 
-      const data = await prisma.page.findUnique({
+      const data = await prisma.blog.findUnique({
         where: {
           slug,
         },
@@ -120,7 +120,7 @@ module.exports = {
     try {
       const { format } = req.query;
 
-      const data = await prisma.page.findMany({
+      const data = await prisma.blog.findMany({
         orderBy: {
           createdAt: 'desc',
         },
@@ -198,7 +198,7 @@ module.exports = {
 
       if (!title || !content) return res.status(400).send({ message: 'All fields are required' });
 
-      const existingPage = await prisma.page.findUnique({
+      const existingPage = await prisma.blog.findUnique({
         where: {
           slug,
         },
@@ -208,7 +208,7 @@ module.exports = {
 
       const readTime = getAverageReadingSpeed(content);
 
-      const data = await prisma.page.update({
+      const data = await prisma.blog.update({
         where: {
           slug,
         },
@@ -233,7 +233,7 @@ module.exports = {
     try {
       const { slug } = req.params;
 
-      const existingPage = await prisma.page.findUnique({
+      const existingPage = await prisma.blog.findUnique({
         where: {
           slug,
         },
@@ -241,7 +241,7 @@ module.exports = {
 
       if (!existingPage) return res.status(404).send({ message: notFoundMessage });
 
-      await prisma.page.delete({
+      await prisma.blog.delete({
         where: {
           slug,
         },

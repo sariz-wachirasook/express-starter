@@ -3,6 +3,11 @@ const XLSX = require('xlsx');
 const { JSDOM } = require('jsdom');
 
 module.exports = {
+  getId: ({ id = -1 }) => {
+    const idInt = parseInt(id, 10) || -1;
+    return idInt;
+  },
+
   getPagination: ({ page = 1, perPage = 10 }) => ({
     skip: parseInt((page - 1) * perPage, 10) || 0,
     take: parseInt(perPage, 10) || 10,

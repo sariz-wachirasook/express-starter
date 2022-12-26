@@ -8,6 +8,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ---------- USER MANAGEMENT ---------- //
 model User {
   id                 Int                  @id @default(autoincrement())
   email              String               @unique
@@ -75,6 +76,18 @@ model SocialLogin {
   @@map(name: "social_login")
 }
 
+enum Role {
+  ADMINISTRATOR
+  USER
+}
+
+enum Gender {
+  u
+  m
+  f
+}
+
+// ---------- CMS ---------- //
 model Page {
   id              Int      @id @default(autoincrement())
   slug            String   @unique
@@ -86,19 +99,39 @@ model Page {
   metaKeywords    String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  // NOTE: I didn't add createdBy and updatedBy to the User model, but you can if you want
   createdBy       String?
   updatedBy       String?
 
   @@map(name: "page")
 }
 
-enum Role {
-  ADMINISTRATOR
-  USER
+model BlogCategory {
+  id        Int      @id @default(autoincrement())
+  slug      String   @unique
+  name      String
+  blog      Blog[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map(name: "blog_category")
 }
 
-enum Gender {
-  u
-  m
-  f
+model Blog {
+  id              Int           @id @default(autoincrement())
+  slug            String        @unique
+  title           String
+  content         String        @db.Text()
+  readTime        Int           @default(0)
+  metaTitle       String?
+  metaDescription String?       @db.Text()
+  metaKeywords    String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  createdBy       String?
+  updatedBy       String?
+  blogCategory    BlogCategory? @relation(fields: [blogCategoryId], references: [id])
+  blogCategoryId  Int?
+
+  @@map(name: "blog")
 }

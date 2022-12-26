@@ -6,7 +6,7 @@ const {
   findUnique,
   update,
   delete: dele,
-} = require('../controllers/pages');
+} = require('../controllers/blogs');
 const authMiddleware = require('../middleware/authMiddleware');
 const errorHandler = require('../middleware/errorHandler');
 const roleMiddleware = require('../middleware/roleMiddleware');

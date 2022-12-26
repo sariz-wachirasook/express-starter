@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const { getPagination, monthDayYearFormat, getCSV, getXLSX } = require('../utils/utils');
+const { getPagination, monthDayYearFormat, getCSV, getXLSX, getId } = require('../utils/utils');
 const prisma = require('../configs/prisma');
 const { notFoundMessage } = require('../messages/systemMessages');
 const sendInformSoftDeleteAccountEmail = require('../mails/sendInformSoftDeleteAccountEmail');
@@ -100,11 +100,11 @@ module.exports = {
 
   findUnique: async (req, res, next) => {
     try {
-      const { id } = req.params;
+      const id = getId(req.params);
 
       const data = await prisma.user.findUnique({
         where: {
-          id: parseInt(id, 10),
+          id,
         },
         ...selectDetail,
       });
@@ -172,14 +172,14 @@ module.exports = {
 
   update: async (req, res, next) => {
     try {
-      const { id } = req.params;
+      const id = getId(req.params);
 
       const { firstName, lastName, gender, phoneNumber, birthDate } = req.body;
       const { isSubscribed } = req.body;
 
       const data = await prisma.user.update({
         where: {
-          id: parseInt(id, 10),
+          id,
         },
         data: {
           profile: {
@@ -214,7 +214,7 @@ module.exports = {
 
   requestSoftDelete: async (req, res, next) => {
     try {
-      const { id } = req.params;
+      const id = getId(req.params);
 
       const today = new Date();
 
@@ -223,7 +223,7 @@ module.exports = {
 
       const data = await prisma.user.update({
         where: {
-          id: parseInt(id, 10),
+          id,
         },
         data: {
           deletedAt: next30Day,
