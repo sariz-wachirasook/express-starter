@@ -160,7 +160,7 @@ module.exports = {
             'Content-Type',
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
           );
-          res.setHeader('Content-Disposition', 'attachment; filename=users.xlsx');
+          res.setHeader('Content-Disposition', 'attachment; filename=pages.xlsx');
           res.send(workbook);
           break;
         }
@@ -179,7 +179,7 @@ module.exports = {
             { id: 'updatedAt', title: 'Updated At' },
             { id: 'updatedBy', title: 'Updated By' },
           ]);
-          res.setHeader('Content-Disposition', 'attachment; filename=users.csv');
+          res.setHeader('Content-Disposition', 'attachment; filename=pages.csv');
           res.setHeader('Content-Type', 'text/csv');
           res.send(csv);
           break;

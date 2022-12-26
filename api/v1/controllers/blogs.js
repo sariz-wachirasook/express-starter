@@ -146,6 +146,7 @@ module.exports = {
       const flattenedData = data.map((item) => ({
         slug: item.slug,
         title: item.title,
+        blogCategories: item.blogCategories.map((category) => category.name).join(', '),
         content: item.content,
         readTime: item.readTime,
         metaTitle: item.metaTitle,
@@ -162,6 +163,7 @@ module.exports = {
           const workbook = getXLSX(flattenedData, [
             'Slug',
             'Title',
+            'Blog Categories',
             'Content',
             'Read Time',
             'Meta Title',
@@ -176,7 +178,7 @@ module.exports = {
             'Content-Type',
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
           );
-          res.setHeader('Content-Disposition', 'attachment; filename=users.xlsx');
+          res.setHeader('Content-Disposition', 'attachment; filename=blogs.xlsx');
           res.send(workbook);
           break;
         }
@@ -185,6 +187,7 @@ module.exports = {
           const csv = getCSV(flattenedData, [
             { id: 'slug', title: 'Slug' },
             { id: 'title', title: 'Title' },
+            { id: 'blogCategories', title: 'Blog Categories' },
             { id: 'content', title: 'Content' },
             { id: 'readTime', title: 'Read Time' },
             { id: 'metaTitle', title: 'Meta Title' },
@@ -195,7 +198,7 @@ module.exports = {
             { id: 'updatedAt', title: 'Updated At' },
             { id: 'updatedBy', title: 'Updated By' },
           ]);
-          res.setHeader('Content-Disposition', 'attachment; filename=users.csv');
+          res.setHeader('Content-Disposition', 'attachment; filename=blogs.csv');
           res.setHeader('Content-Type', 'text/csv');
           res.send(csv);
           break;
