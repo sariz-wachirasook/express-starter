@@ -1,7 +1,0 @@
-{
-  "try catch": {
-    "prefix": "try",
-    "body": ["try {", "  $1", "} catch (err) {", "  next(err);", "}"],
-    "description": "try catch"
-  }
-}

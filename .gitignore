@@ -1,4 +1,7 @@
+# folder
 node_modules
-# Keep environment variables out of version control
+
+# file
 .env
 ecosystem.config.js
+nginx.conf

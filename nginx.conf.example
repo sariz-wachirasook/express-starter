@@ -1,0 +1,56 @@
+server {
+    listen 80;
+    listen [::]:80;
+    server_name example.com;
+
+    # proxy port 8000 to port 80
+    location / {
+        proxy_pass http://localhost:8000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+    # enable gzip compression
+    gzip on;
+    gzip_types 
+        text/plain 
+        text/css 
+        application/json 
+        application/javascript 
+        text/xml 
+        application/xml 
+        application/xml+rss 
+        text/javascript
+    ;
+
+    # enable caching for images
+    location ~* \.(?:jpg|jpeg|gif|png|ico|cur|webp)$ {
+        expires 1M;
+        access_log off;
+        add_header Access-Control-Allow-Origin *;
+    }
+
+    # enable caching for media files
+    location ~* \.(?:svg|mp4|ogg|ogv|webm)$ {
+        expires 1M;
+        access_log off;
+        add_header Access-Control-Allow-Origin *;
+    }
+
+    # enable caching for documents
+    location ~* \.(?:pdf|doc|docx|xls|xlsx|ppt|pptx|csv)$ {
+        expires 1M;
+        access_log off;
+        add_header Access-Control-Allow-Origin *;
+    }
+
+    # enable caching for zip files
+    location ~* \.(?:zip|rar|tar|tgz|gz|bz2|7z)$ {
+        expires 1M;
+        access_log off;
+        add_header Access-Control-Allow-Origin *;
+    }
+}
