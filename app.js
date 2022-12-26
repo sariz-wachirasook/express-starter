@@ -36,18 +36,23 @@ app.get('/', (req, res) => {
     // blogs cms
     '/api/v1/blogs': 'GET, POST',
     '/api/v1/blogs/export': 'GET',
-    '/api/v1/blogs/:id': 'GET, PATCH, DELETE',
+    '/api/v1/blogs/:slug': 'GET, PATCH, DELETE',
+    '/api/v1/blogs/:slug/upload-banner': 'POST',
+    '/api/v1/blogs/:slug/upload-thumbnail': 'POST',
 
     // pages cms
     '/api/v1/pages': 'GET, POST',
     '/api/v1/pages/export': 'GET',
-    '/api/v1/pages/:id': 'GET, PATCH, DELETE',
+    '/api/v1/pages/:slug': 'GET, PATCH, DELETE',
+    '/api/v1/pages/:slug/upload-banner': 'POST',
+    '/api/v1/pages/:slug/upload-thumbnail': 'POST',
 
     // users
     '/api/v1/users': 'GET, POST',
     '/api/v1/users/export': 'GET',
     '/api/v1/users/:id': 'GET, PATCH',
     '/api/v1/users/:id/delete': 'DELETE',
+    '/api/v1/users/:id/upload-avatar': 'POST',
 
     // reset password
     '/api/v1/users/reset-password': 'POST',

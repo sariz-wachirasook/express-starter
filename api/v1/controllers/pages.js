@@ -14,6 +14,7 @@ const selectList = {
     slug: true,
     title: true,
     readTime: true,
+    thumbnail: true,
     createdAt: true,
     createdBy: true,
   },
@@ -28,6 +29,8 @@ const selectDetail = {
     metaTitle: true,
     metaDescription: true,
     metaKeywords: true,
+    banner: true,
+    thumbnail: true,
     createdAt: true,
     updatedAt: true,
     createdBy: true,
@@ -187,6 +190,76 @@ module.exports = {
       }
     } catch (err) {
       next(err);
+    }
+  },
+
+  uploadBanner: async (req, res, next) => {
+    try {
+      const { slug } = req.params;
+      const { file } = req;
+
+      console.log(file);
+
+      if (!file) return res.status(400).send({ message: 'File is required' });
+
+      const existingPage = await prisma.page.findUnique({
+        where: {
+          slug,
+        },
+      });
+
+      if (!existingPage) return res.status(404).send({ message: notFoundMessage });
+
+      const data = await prisma.page.update({
+        where: {
+          slug,
+        },
+        data: {
+          banner: file.path,
+        },
+        select: {
+          banner: true,
+        },
+      });
+
+      return res.send(data);
+    } catch (err) {
+      return next(err);
+    }
+  },
+
+  uploadThumbnail: async (req, res, next) => {
+    try {
+      const { slug } = req.params;
+      const { file } = req;
+
+      console.log(file);
+
+      if (!file) return res.status(400).send({ message: 'File is required' });
+
+      const existingPage = await prisma.page.findUnique({
+        where: {
+          slug,
+        },
+      });
+
+      if (!existingPage) return res.status(404).send({ message: notFoundMessage });
+
+      const data = await prisma.page.update({
+        where: {
+          slug,
+        },
+        data: {
+          thumbnail: file.path,
+        },
+        select: {
+          thumbnail: true,
+        },
+      });
+
+      return res.send(data);
+    } catch (err) {
+      return next(err);
     }
   },
 

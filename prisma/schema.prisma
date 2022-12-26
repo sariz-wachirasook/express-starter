@@ -58,6 +58,7 @@ model Profile {
   phoneNumber  String?
   birthDate    DateTime?
   gender       Gender    @default(u)
+  avatar       String?
   isSubscribed Boolean   @default(false)
   user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       Int       @unique
@@ -97,6 +98,8 @@ model Page {
   metaTitle       String?
   metaDescription String?  @db.Text()
   metaKeywords    String?
+  thumbnail       String?
+  banner          String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   // NOTE: I didn't add createdBy and updatedBy to the User model, but you can if you want
@@ -126,6 +129,8 @@ model Blog {
   metaTitle       String?
   metaDescription String?        @db.Text()
   metaKeywords    String?
+  thumbnail       String?
+  banner          String?
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
   createdBy       String?

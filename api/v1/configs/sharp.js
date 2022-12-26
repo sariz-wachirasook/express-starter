@@ -6,30 +6,34 @@ module.exports = async (req, res, next) => {
   try {
     const { file } = req;
 
-    if (file) {
-      const randomName = crypto.randomBytes(8).toString('hex');
+    const randomName = crypto.randomBytes(8).toString('hex');
 
-      const folder = `public/media/${randomName.split('').slice(0, 2).join('')}/${randomName
-        .split('')
-        .slice(2, 4)
-        .join('')}`;
+    const hashFolder = `media/${randomName.split('').slice(0, 2).join('')}/${randomName
+      .split('')
+      .slice(2, 4)
+      .join('')}`;
 
-      if (!fs.existsSync(folder)) fs.mkdirSync(folder, { recursive: true });
+    if (!fs.existsSync(`public/${hashFolder}`)) fs.mkdirSync(`public/${hashFolder}`, { recursive: true });
 
-      const webpImage = await sharp(file.buffer)
-        .resize({
-          width: 1920,
-          height: 1920,
-          fit: 'inside',
-        })
-        .toFormat('webp')
-        .toBuffer();
+    const webpImage = await sharp(file.buffer)
+      .resize({
+        width: 1920,
+        height: 1920,
+        fit: 'inside',
+      })
+      .toFormat('webp')
+      .toBuffer();
 
-      fs.writeFileSync(`${folder}/${randomName}.webp`, webpImage);
+    fs.writeFileSync(`public/${hashFolder}/${randomName}.webp`, webpImage);
 
-      res.send('Image uploaded and converted to WEBP successfully');
-    }
+    req.file = {
+      path: `/${hashFolder}/${randomName}.webp`,
+      filename: `${randomName}.webp`,
+      mimetype: 'image/webp',
+    };
+
+    return next();
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
