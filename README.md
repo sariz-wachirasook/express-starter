@@ -28,6 +28,7 @@ pnpm dev
 ### 2. CMS System
 
 - crud cms pages
+- crud cms blog categories
 - crud cms blogs
 - slugify
 - average reading time
@@ -39,6 +40,9 @@ pnpm dev
   - csv
   - excel
 - export pages
+  - csv
+  - excel
+- export blogs
   - csv
   - excel
 
