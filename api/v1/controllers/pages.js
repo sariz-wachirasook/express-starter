@@ -1,3 +1,5 @@
+const path = require('path');
+const fs = require('fs');
 const {
   getPagination,
   monthDayYearFormat,
@@ -198,17 +200,23 @@ module.exports = {
       const { slug } = req.params;
       const { file } = req;
 
-      console.log(file);
-
       if (!file) return res.status(400).send({ message: 'File is required' });
 
       const existingPage = await prisma.page.findUnique({
         where: {
           slug,
         },
+        select: {
+          banner: true,
+        },
       });
 
       if (!existingPage) return res.status(404).send({ message: notFoundMessage });
+
+      if (existingPage.banner) {
+        const filePath = path.join('public', existingPage.banner);
+        if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+      }
 
       const data = await prisma.page.update({
         where: {
@@ -241,9 +249,17 @@ module.exports = {
         where: {
           slug,
         },
+        select: {
+          thumbnail: true,
+        },
       });
 
       if (!existingPage) return res.status(404).send({ message: notFoundMessage });
+
+      if (existingPage.thumbnail) {
+        const filePath = path.join('public', existingPage.thumbnail);
+        if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+      }
 
       const data = await prisma.page.update({
         where: {

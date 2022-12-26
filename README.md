@@ -53,7 +53,7 @@ pnpm dev
 
 ## 5. Image Upload System
 
-- crud upload images
+- webp images
 - auto resize images
 - auto compress images
 
