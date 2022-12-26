@@ -71,6 +71,7 @@ pnpm dev
   - PM2
   - Nginx
   - MySQL
+
 - [x] Other SAAS
   - [x] AWS
   - [x] Azure
