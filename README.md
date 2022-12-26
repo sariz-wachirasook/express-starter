@@ -22,7 +22,7 @@ pnpm dev
 - user register
 - user refresh token
 - user reset password
-- user soft delete
+- user soft delete (GDPR)
 - user roles and permissions (RBAC)
 
 ### 2. CMS System
@@ -51,7 +51,13 @@ pnpm dev
 - welcome email
 - reset password email
 
-### 5. Cronjobs System
+## 5. Image Upload System
+
+- crud upload images
+- auto resize images
+- auto compress images
+
+### 6. Cronjobs System
 
 - every 1 minute
 - every 30 minutes
@@ -60,13 +66,9 @@ pnpm dev
 - every 1st day of week
 - every 1st day of month
 
-## Other Developer Tools
+## Infrastructure
 
 ---
-
-- eslint
-- prettier
-- husky
 
 ## Where can be deployed?
 

@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 
 const app = express();
 
@@ -12,7 +13,11 @@ const resetPassword = require('./api/v1/routes/resetPassword');
 const { appPort } = require('./api/v1/configs/env');
 
 const port = appPort;
+
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
+app.use(express.static('public'));
 
 app.use('/api/v1/auth', authentication);
 app.use('/api/v1/blogs', blogs);
