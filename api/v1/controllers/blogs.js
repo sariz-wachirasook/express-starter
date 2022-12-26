@@ -16,6 +16,12 @@ const selectList = {
     readTime: true,
     createdAt: true,
     createdBy: true,
+    blogCategories: {
+      select: {
+        name: true,
+        slug: true,
+      },
+    },
   },
 };
 
@@ -32,6 +38,12 @@ const selectDetail = {
     updatedAt: true,
     createdBy: true,
     updatedBy: true,
+    blogCategories: {
+      select: {
+        name: true,
+        slug: true,
+      },
+    },
   },
 };
 
@@ -39,6 +51,7 @@ module.exports = {
   create: async (req, res, next) => {
     try {
       const { title, content, slug, metaTitle, metaDescription, metaKeywords } = req.body;
+      const { blogCategories } = req.body;
       const { email } = req.user;
 
       if (!title || !content) return res.status(400).send({ message: 'All fields are required' });
@@ -68,6 +81,9 @@ module.exports = {
           metaTitle,
           metaDescription,
           metaKeywords,
+          blogCategories: {
+            connect: blogCategories.map((item) => ({ slug: item })),
+          },
         },
         ...selectDetail,
       });
@@ -193,7 +209,7 @@ module.exports = {
   update: async (req, res, next) => {
     try {
       const { slug } = req.params;
-      const { title, content, metaTitle, metaDescription } = req.body;
+      const { title, content, metaTitle, metaDescription, metaKeywords, blogCategories } = req.body;
       const { email } = req.user;
 
       if (!title || !content) return res.status(400).send({ message: 'All fields are required' });
@@ -218,7 +234,11 @@ module.exports = {
           readTime,
           metaTitle,
           metaDescription,
+          metaKeywords,
           updatedBy: email,
+          blogCategories: {
+            set: blogCategories.map((item) => ({ slug: item })),
+          },
         },
         ...selectDetail,
       });

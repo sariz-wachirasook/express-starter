@@ -110,28 +110,27 @@ model BlogCategory {
   id        Int      @id @default(autoincrement())
   slug      String   @unique
   name      String
-  blog      Blog[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  blogs     Blog[]   @relation(name: "blogs_on_blog_categories")
 
   @@map(name: "blog_category")
 }
 
 model Blog {
-  id              Int           @id @default(autoincrement())
-  slug            String        @unique
+  id              Int            @id @default(autoincrement())
+  slug            String         @unique
   title           String
-  content         String        @db.Text()
-  readTime        Int           @default(0)
+  content         String         @db.Text()
+  readTime        Int            @default(0)
   metaTitle       String?
-  metaDescription String?       @db.Text()
+  metaDescription String?        @db.Text()
   metaKeywords    String?
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
   createdBy       String?
   updatedBy       String?
-  blogCategory    BlogCategory? @relation(fields: [blogCategoryId], references: [id])
-  blogCategoryId  Int?
+  blogCategories  BlogCategory[] @relation(name: "blogs_on_blog_categories")
 
   @@map(name: "blog")
 }
