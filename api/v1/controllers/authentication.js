@@ -41,7 +41,6 @@ module.exports = {
         { expiresIn: JWTExpires },
       );
 
-      console.log(JWTRefreshTokenSecret);
       const refreshToken = jwt.sign({ email: user.email }, JWTRefreshTokenSecret, {
         expiresIn: JWTRefreshTokenExpires,
       });
