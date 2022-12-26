@@ -5,8 +5,8 @@
   "name": "express-starter",
   "version": "1.0.0",
   "scripts": {
-    "dev": "nodemon app.js",
-    "start": "node app.js",
+    "dev": "concurrently --kill-others \"nodemon app.js\" \"nodemon cron.js\"",
+    "start": "concurrently --kill-others \"node app.js\" \"node cron.js\"",
     "schema:update": "prisma generate && prisma db push",
     "migrate": "prisma migrate save --name init && prisma migrate up",
     "prisma": "prisma",
@@ -15,6 +15,7 @@
     "lint:fix": "eslint . --fix"
   },
   "devDependencies": {
+    "concurrently": "^7.6.0",
     "eslint": "^8.30.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.26.0",
