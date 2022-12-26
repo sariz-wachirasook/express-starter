@@ -8,5 +8,11 @@ module.exports = {
       out_file: './logs/pm2/out.log',
       error_file: './logs/pm2/err.log',
     },
+    {
+      name: 'Express Starter Cronjob',
+      script: 'cron.js',
+      out_file: './logs/pm2/cron-out.log',
+      error_file: './logs/pm2/cron-err.log',
+    },
   ],
 };

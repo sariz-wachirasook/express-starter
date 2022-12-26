@@ -2,7 +2,6 @@ const express = require('express');
 
 const app = express();
 
-const crons = require('./api/v1/configs/crons');
 const { appPort } = require('./api/v1/configs/env');
 
 const authentication = require('./api/v1/routes/authentication');
@@ -46,6 +45,3 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`app listening on port ${port}`);
 });
-
-// cron jobs
-crons.run();
