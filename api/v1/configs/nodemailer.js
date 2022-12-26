@@ -6,8 +6,8 @@ const {
   mailPort,
   mailHost,
   appName,
-  nodeEnv,
   mailFallback,
+  appEnv,
 } = require('./env');
 
 module.exports = (to, subject, body) => {
@@ -27,7 +27,7 @@ module.exports = (to, subject, body) => {
 
   const mailOptions = {
     from: `${appName} <${mailFrom}>`,
-    to: nodeEnv === 'production' ? to : mailFallback,
+    to: appEnv === 'production' ? to : mailFallback,
     subject,
     html: body,
   };

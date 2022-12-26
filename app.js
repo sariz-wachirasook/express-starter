@@ -1,14 +1,16 @@
 const express = require('express');
 
 const app = express();
-const port = 8000;
 
-const crons = require('./api/v1/crons/crons');
+const crons = require('./api/v1/configs/crons');
+const { appPort } = require('./api/v1/configs/env');
 
 const authentication = require('./api/v1/routes/authentication');
 const pages = require('./api/v1/routes/pages');
 const users = require('./api/v1/routes/users');
 const resetPassword = require('./api/v1/routes/resetPassword');
+
+const port = appPort;
 
 app.use(express.json());
 
@@ -33,6 +35,7 @@ app.get('/', (req, res) => {
     '/api/v1/users': 'GET, POST',
     '/api/v1/users/export': 'GET',
     '/api/v1/users/:id': 'GET, PATCH',
+    '/api/v1/users/:id/delete': 'DELETE',
 
     // reset password
     '/api/v1/users/reset-password': 'POST',

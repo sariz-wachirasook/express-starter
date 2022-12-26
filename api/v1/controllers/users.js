@@ -13,7 +13,7 @@ const selectList = {
     createdAt: true,
     profile: {
       select: {
-        isNewsletterSubscribed: true,
+        isSubscribed: true,
       },
     },
   },
@@ -34,7 +34,7 @@ const selectDetail = {
         gender: true,
         birthDate: true,
         phoneNumber: true,
-        isNewsletterSubscribed: true,
+        isSubscribed: true,
       },
     },
   },
@@ -132,7 +132,7 @@ module.exports = {
         name: item.name,
         email: item.email,
         createdAt: monthDayYearFormat(item.createdAt),
-        isNewsletterSubscribed: item.profile?.isNewsletterSubscribed ? 'Yes' : 'No',
+        isSubscribed: item.profile?.isSubscribed ? 'Yes' : 'No',
       }));
 
       switch (format) {
@@ -157,7 +157,7 @@ module.exports = {
             { id: 'email', title: 'Email' },
             { id: 'name', title: 'Name' },
             { id: 'createdAt', title: 'Created At' },
-            { id: 'isNewsletterSubscribed', title: 'Subscribed to Newsletter' },
+            { id: 'isSubscribed', title: 'Subscribed to Newsletter' },
           ]);
           res.setHeader('Content-Disposition', 'attachment; filename=users.csv');
           res.setHeader('Content-Type', 'text/csv');
@@ -175,7 +175,7 @@ module.exports = {
       const { id } = req.params;
 
       const { firstName, lastName, gender, phoneNumber, birthDate } = req.body;
-      const { isNewsletterSubscribed } = req.body;
+      const { isSubscribed } = req.body;
 
       const data = await prisma.user.update({
         where: {
@@ -190,7 +190,7 @@ module.exports = {
                 gender: gender || 'u',
                 phoneNumber,
                 birthDate,
-                isNewsletterSubscribed,
+                isSubscribed,
               },
               update: {
                 firstName,
@@ -198,7 +198,7 @@ module.exports = {
                 gender: gender || 'u',
                 phoneNumber,
                 birthDate,
-                isNewsletterSubscribed,
+                isSubscribed,
               },
             },
           },

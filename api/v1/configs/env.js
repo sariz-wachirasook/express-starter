@@ -2,8 +2,8 @@ const { env } = process;
 
 module.exports = {
   appName: env.APP_NAME,
-
-  nodeEnv: env.NODE_ENV || 'development',
+  appPort: env.APP_PORT || 3000,
+  appEnv: env.APP_ENV || 'development',
 
   JWTSecret: env.JWT_SECRET,
   JWTExpires: env.JWT_EXPIRES || '1h',

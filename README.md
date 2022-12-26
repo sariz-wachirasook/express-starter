@@ -28,6 +28,7 @@ pnpm dev
 ### 2. CMS System
 
 - crud cms pages
+- crud cms blogs
 - slugify
 - average reading time
 - seo

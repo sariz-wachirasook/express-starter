@@ -1,7 +1,12 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const prisma = require('../configs/prisma');
-const { JWTSecret, JWTRefreshTokenSecret, JWTExpires, JWTRefreshTokenExpires } = require('../configs/env');
+const {
+  JWTSecret,
+  JWTRefreshTokenSecret,
+  JWTExpires,
+  JWTRefreshTokenExpires,
+} = require('../configs/env');
 const sendWelcomeEmail = require('../mails/sendWelcomeEmail');
 
 module.exports = {
@@ -35,11 +40,18 @@ module.exports = {
         JWTSecret,
         { expiresIn: JWTExpires },
       );
-      const refreshToken = await prisma.refreshToken.create({
-        data: {
-          token: jwt.sign({ email: user.email }, JWTRefreshTokenSecret, {
-            expiresIn: JWTRefreshTokenExpires,
-          }),
+
+      console.log(JWTRefreshTokenSecret);
+      const refreshToken = jwt.sign({ email: user.email }, JWTRefreshTokenSecret, {
+        expiresIn: JWTRefreshTokenExpires,
+      });
+
+      await prisma.refreshToken.upsert({
+        where: {
+          token: refreshToken,
+        },
+        create: {
+          token: refreshToken,
           expiresAt: new Date(date.setDate(date.getDate() + parseInt(JWTRefreshTokenExpires, 10))),
           user: {
             connect: {
@@ -47,9 +59,13 @@ module.exports = {
             },
           },
         },
+        update: {
+          token: refreshToken,
+          expiresAt: new Date(date.setDate(date.getDate() + parseInt(JWTRefreshTokenExpires, 10))),
+        },
       });
 
-      res.send({ token, refreshToken: refreshToken.token });
+      res.send({ token, refreshToken });
     } catch (err) {
       next(err);
     }

@@ -1,5 +1,4 @@
 const bcrypt = require('bcrypt');
-const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const prisma = require('../configs/prisma');
 const {
@@ -37,7 +36,7 @@ module.exports = {
         },
       });
 
-      const token = crypto.randomBytes(32).toString('hex');
+      const token = jwt.sign({ email: user.email }, JWTSecret, { expiresIn: resetPasswordExpires });
 
       await prisma.resetPasswordToken.create({
         data: {
@@ -66,8 +65,16 @@ module.exports = {
 
       if (!token) return res.status(400).send({ message: 'Token is required' });
       if (!password) return res.status(400).send({ message: 'Password is required' });
-      if (!confirmPassword) return res.status(400).send({ message: 'Confirm password is required' });
-      if (password !== confirmPassword) return res.status(400).send({ message: 'Passwords do not match' });
+      if (!confirmPassword) {
+        return res.status(400).send({ message: 'Confirm password is required' });
+      }
+      if (password !== confirmPassword) {
+        return res.status(400).send({ message: 'Passwords do not match' });
+      }
+
+      // check if token is valid
+      const verified = jwt.verify(token, JWTSecret);
+      if (!verified) return res.status(401).send({ message: 'Invalid token' });
 
       const resetPasswordToken = await prisma.resetPasswordToken.findUnique({
         where: {
@@ -76,6 +83,7 @@ module.exports = {
         select: {
           id: true,
           token: true,
+          expiresAt: true,
           user: {
             select: {
               id: true,

@@ -12,8 +12,7 @@ module.exports = {
   getAverageReadingSpeed: (text) => {
     const html = `<div id="editor">${text}</div>`;
     const dom = new JSDOM(html);
-    const editorContent = dom.window.document.getElementById('editor').innerHTML;
-
+    const editorContent = dom.window.document.getElementById('editor').textContent;
     const words = editorContent.split(' ').length;
     const minutes = words / 200;
 
@@ -35,7 +34,6 @@ module.exports = {
 
   getCSV: (data, fields) => {
     const csvStringifier = createCsvWriter({ header: fields });
-
     return csvStringifier.getHeaderString() + csvStringifier.stringifyRecords(data);
   },
 

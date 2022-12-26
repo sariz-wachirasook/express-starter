@@ -1,10 +1,14 @@
 const cron = require('cron');
-const { deleteUser } = require('../commands/users');
+const { deleteUser, deleteRefreshToken, deleteResetPasswordToken } = require('../commands/users');
 
 const methods = {
   runEveryMinute: () => {
-    const job = new cron.CronJob('0 * * * * *', () => {
+    const job = new cron.CronJob('0 * * * * *', async () => {
       console.log('Cron Running every minute', new Date());
+
+      await deleteUser();
+      await deleteRefreshToken();
+      await deleteResetPasswordToken();
     });
 
     job.start();
@@ -19,7 +23,7 @@ const methods = {
   },
 
   runEveryHour: () => {
-    const job = new cron.CronJob('0 * * * *', () => {
+    const job = new cron.CronJob('0 * * * *', async () => {
       console.log('Cron Running every hour', new Date());
     });
 
@@ -29,8 +33,6 @@ const methods = {
   runEveryDayAtMidnight: () => {
     const job = new cron.CronJob('0 0 0 * * *', async () => {
       console.log('Cron Running every day at midnight', new Date());
-
-      await deleteUser();
     });
 
     job.start();

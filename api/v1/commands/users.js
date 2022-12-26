@@ -18,4 +18,24 @@ module.exports = {
       },
     });
   },
+
+  deleteRefreshToken: async () => {
+    await prisma.refreshToken.deleteMany({
+      where: {
+        expiresAt: {
+          lte: new Date(),
+        },
+      },
+    });
+  },
+
+  deleteResetPasswordToken: async () => {
+    await prisma.resetPasswordToken.deleteMany({
+      where: {
+        expiresAt: {
+          lte: new Date(),
+        },
+      },
+    });
+  },
 };
