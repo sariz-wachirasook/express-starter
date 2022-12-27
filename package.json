@@ -11,7 +11,8 @@
     "schema:update": "prisma generate && prisma db push",
     "husky:prepare": "husky install",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "update:package": "ncu -u && pnpm install"
   },
   "devDependencies": {
     "concurrently": "^7.6.0",
@@ -20,6 +21,7 @@
     "eslint-plugin-import": "^2.26.0",
     "husky": "^8.0.2",
     "nodemon": "^2.0.20",
+    "npm-check-updates": "^16.6.2",
     "pm2": "^5.2.2",
     "prisma": "^4.8.0"
   },
