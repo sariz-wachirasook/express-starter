@@ -6,6 +6,8 @@ module.exports = async (req, res, next) => {
   try {
     const { file } = req;
 
+    if (!file) return res.status(400).send({ message: 'File is required' });
+
     const randomName = crypto.randomBytes(8).toString('hex');
 
     const hashFolder = `media/${randomName.split('').slice(0, 2).join('')}/${randomName
@@ -13,7 +15,9 @@ module.exports = async (req, res, next) => {
       .slice(2, 4)
       .join('')}`;
 
-    if (!fs.existsSync(`public/${hashFolder}`)) fs.mkdirSync(`public/${hashFolder}`, { recursive: true });
+    if (!fs.existsSync(`public/${hashFolder}`)) {
+      fs.mkdirSync(`public/${hashFolder}`, { recursive: true });
+    }
 
     const webpImage = await sharp(file.buffer)
       .resize({

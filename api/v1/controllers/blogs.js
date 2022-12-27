@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const {
   getPagination,
   monthDayYearFormat,
@@ -132,6 +134,109 @@ module.exports = {
     }
   },
 
+  hasResource: async (req, res, next) => {
+    try {
+      const { slug } = req.params;
+
+      const data = await prisma.blog.findUnique({
+        where: {
+          slug,
+        },
+        select: {
+          slug: true,
+        },
+      });
+
+      if (!data) return res.status(404).send({ message: notFoundMessage });
+
+      return next();
+    } catch (err) {
+      return next(err);
+    }
+  },
+
+  uploadBanner: async (req, res, next) => {
+    try {
+      const { slug } = req.params;
+      const { file } = req;
+
+      if (!file) return res.status(400).send({ message: 'File is required' });
+
+      const existingBlog = await prisma.blog.findUnique({
+        where: {
+          slug,
+        },
+        select: {
+          banner: true,
+        },
+      });
+
+      if (!existingBlog) return res.status(404).send({ message: notFoundMessage });
+
+      if (existingBlog.banner) {
+        const filePath = path.join('public', existingBlog.banner);
+        if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+      }
+
+      const data = await prisma.blog.update({
+        where: {
+          slug,
+        },
+        data: {
+          banner: file.path,
+        },
+        select: {
+          banner: true,
+        },
+      });
+
+      return res.send(data);
+    } catch (err) {
+      return next(err);
+    }
+  },
+
+  uploadThumbnail: async (req, res, next) => {
+    try {
+      const { slug } = req.params;
+      const { file } = req;
+
+      if (!file) return res.status(400).send({ message: 'File is required' });
+
+      const existingBlog = await prisma.blog.findUnique({
+        where: {
+          slug,
+        },
+        select: {
+          thumbnail: true,
+        },
+      });
+
+      if (!existingBlog) return res.status(404).send({ message: notFoundMessage });
+
+      if (existingBlog.thumbnail) {
+        const filePath = path.join('public', existingBlog.thumbnail);
+        if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+      }
+
+      const data = await prisma.blog.update({
+        where: {
+          slug,
+        },
+        data: {
+          thumbnail: file.path,
+        },
+        select: {
+          thumbnail: true,
+        },
+      });
+
+      return res.send(data);
+    } catch (err) {
+      return next(err);
+    }
+  },
+
   dataExport: async (req, res, next) => {
     try {
       const { format } = req.query;
@@ -217,13 +322,13 @@ module.exports = {
 
       if (!title || !content) return res.status(400).send({ message: 'All fields are required' });
 
-      const existingPage = await prisma.blog.findUnique({
+      const existingBlog = await prisma.blog.findUnique({
         where: {
           slug,
         },
       });
 
-      if (!existingPage) return res.status(404).send({ message: notFoundMessage });
+      if (!existingBlog) return res.status(404).send({ message: notFoundMessage });
 
       const readTime = getAverageReadingSpeed(content);
 
@@ -256,13 +361,13 @@ module.exports = {
     try {
       const { slug } = req.params;
 
-      const existingPage = await prisma.blog.findUnique({
+      const existingBlog = await prisma.blog.findUnique({
         where: {
           slug,
         },
       });
 
-      if (!existingPage) return res.status(404).send({ message: notFoundMessage });
+      if (!existingBlog) return res.status(404).send({ message: notFoundMessage });
 
       await prisma.blog.delete({
         where: {

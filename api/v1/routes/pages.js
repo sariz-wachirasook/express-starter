@@ -10,6 +10,7 @@ const {
   delete: dele,
   uploadBanner,
   uploadThumbnail,
+  hasResource,
 } = require('../controllers/pages');
 const authMiddleware = require('../middleware/authMiddleware');
 const errorHandler = require('../middleware/errorHandler');
@@ -25,6 +26,7 @@ router.post(
   '/:slug/upload-banner',
   authMiddleware,
   roleMiddleware('ADMINISTRATOR'),
+  hasResource,
   upload.single('file'),
   sharp,
   uploadBanner,
@@ -35,6 +37,7 @@ router.post(
   '/:slug/upload-thumbnail',
   authMiddleware,
   roleMiddleware('ADMINISTRATOR'),
+  hasResource,
   upload.single('file'),
   sharp,
   uploadThumbnail,

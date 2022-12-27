@@ -1,7 +1,7 @@
 # folder
 node_modules
 logs
-public
+public/media
 
 # file
 .env

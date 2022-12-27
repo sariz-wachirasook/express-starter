@@ -121,6 +121,27 @@ module.exports = {
     }
   },
 
+  hasResource: async (req, res, next) => {
+    try {
+      const { slug } = req.params;
+
+      const data = await prisma.page.findUnique({
+        where: {
+          slug,
+        },
+        select: {
+          slug: true,
+        },
+      });
+
+      if (!data) return res.status(404).send({ message: notFoundMessage });
+
+      return next();
+    } catch (err) {
+      return next(err);
+    }
+  },
+
   dataExport: async (req, res, next) => {
     try {
       const { format } = req.query;
@@ -240,8 +261,6 @@ module.exports = {
     try {
       const { slug } = req.params;
       const { file } = req;
-
-      console.log(file);
 
       if (!file) return res.status(400).send({ message: 'File is required' });
 
