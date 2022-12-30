@@ -1,9 +1,7 @@
 const { getPagination, getId } = require('../utils/utils');
 const prisma = require('../configs/prisma');
-const slugify = require('../configs/slugify');
 const {
   notFoundMessage,
-  slugAlreadyExists,
   allFieldsRequired,
   deleteSuccess,
   codeAlreadyExists,
