@@ -8,6 +8,7 @@
 # (can also use yarn or npm)
 pnpm install
 pnpm schema:update
+node tools/generate.js --user.name="" --user.email="" --user.password=""
 pnpm dev
 ```
 
@@ -65,6 +66,8 @@ pnpm dev
 - every 1 day
 - every 1st day of week
 - every 1st day of month
+
+### 7. Localization System
 
 ## Infrastructure
 
