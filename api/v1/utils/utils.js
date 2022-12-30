@@ -1,6 +1,7 @@
 const createCsvWriter = require('csv-writer').createObjectCsvStringifier;
 const XLSX = require('xlsx');
 const { JSDOM } = require('jsdom');
+const prisma = require('../configs/prisma');
 
 module.exports = {
   getId: ({ id = -1 }) => {
@@ -49,5 +50,21 @@ module.exports = {
     XLSX.utils.sheet_add_json(worksheet, data, { origin: 'A2', skipHeader: true });
     XLSX.utils.book_append_sheet(workbook, worksheet, name || 'Sheet1');
     return XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+  },
+
+  getLocale: async (req) => {
+    // header accept language
+    const { 'accept-language': acceptLanguage } = req.headers;
+
+    const locale = await prisma.locale.findUnique({
+      where: {
+        code: acceptLanguage || 'en',
+      },
+      select: {
+        code: true,
+      },
+    });
+
+    return locale;
   },
 };

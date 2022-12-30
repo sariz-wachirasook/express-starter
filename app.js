@@ -6,6 +6,7 @@ const app = express();
 const authentication = require('./api/v1/routes/authentication');
 const blogs = require('./api/v1/routes/blogs');
 const blogCategories = require('./api/v1/routes/blogCategories');
+const locales = require('./api/v1/routes/locales');
 const pages = require('./api/v1/routes/pages');
 const users = require('./api/v1/routes/users');
 const resetPassword = require('./api/v1/routes/resetPassword');
@@ -22,6 +23,7 @@ app.use(express.static('public'));
 app.use('/api/v1/auth', authentication);
 app.use('/api/v1/blogs', blogs);
 app.use('/api/v1/blog-categories', blogCategories);
+app.use('/api/v1/locales', locales);
 app.use('/api/v1/pages', pages);
 app.use('/api/v1/reset-password', resetPassword);
 app.use('/api/v1/users', users);
@@ -39,6 +41,10 @@ app.get('/', (req, res) => {
     '/api/v1/blogs/:slug': 'GET, PATCH, DELETE',
     '/api/v1/blogs/:slug/upload-banner': 'POST',
     '/api/v1/blogs/:slug/upload-thumbnail': 'POST',
+
+    // locales
+    '/api/v1/locales': 'GET, POST',
+    '/api/v1/locales/:id': 'GET, PATCH, DELETE',
 
     // pages cms
     '/api/v1/pages': 'GET, POST',

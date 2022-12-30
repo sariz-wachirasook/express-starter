@@ -1,6 +1,6 @@
 {
   "author": "Sariz Wachirasook",
-  "description": "Express Starter For Workshop (Express + Prisma + MySQL project)",
+  "description": "Express Starter (Express + Prisma + MySQL project)",
   "license": "MIT",
   "name": "express-starter",
   "version": "1.0.0",
