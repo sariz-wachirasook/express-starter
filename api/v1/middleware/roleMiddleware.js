@@ -1,3 +1,5 @@
+const { forbidden } = require('../messages/systemMessages');
+
 // role hierarchy
 const roles = {
   ADMINISTRATOR: ['ADMINISTRATOR', 'MANAGER', 'USER'], // admin can access admin, manager, and user routes
@@ -11,7 +13,7 @@ function roleMiddleware(role) {
     const { user } = req;
     if (!user) return res.status(401).send({ message: 'Unauthorized' });
     if (roles[user.role].includes(role)) return next();
-    return res.status(403).send({ message: 'Forbidden' });
+    return res.status(403).send({ message: forbidden });
   };
 }
 

@@ -9,6 +9,7 @@ const {
   resetPasswordExpires,
 } = require('../configs/env');
 const sendRequestResetPasswordEmail = require('../mails/sendRequestResetPasswordEmail');
+const { invalidToken } = require('../messages/systemMessages');
 
 module.exports = {
   requestResetPassword: async (req, res, next) => {
@@ -74,7 +75,7 @@ module.exports = {
 
       // check if token is valid
       const verified = jwt.verify(token, JWTSecret);
-      if (!verified) return res.status(401).send({ message: 'Invalid token' });
+      if (!verified) return res.status(401).send({ message: invalidToken });
 
       const resetPasswordToken = await prisma.resetPasswordToken.findUnique({
         where: {
@@ -95,7 +96,7 @@ module.exports = {
         },
       });
 
-      if (!resetPasswordToken) return res.status(401).send({ message: 'Invalid token' });
+      if (!resetPasswordToken) return res.status(401).send({ message: invalidToken });
 
       const date = new Date();
 

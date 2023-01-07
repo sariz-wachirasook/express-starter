@@ -1,10 +1,11 @@
 const jwt = require('jsonwebtoken');
 const { JWTSecret } = require('../configs/env');
+const { invalidToken, noAuthHeader } = require('../messages/systemMessages');
 
 module.exports = (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
-    if (!authHeader) return res.status(401).send({ error: 'No authorization header provided' });
+    if (!authHeader) return res.status(401).send({ error: noAuthHeader });
 
     const token = authHeader.split(' ')[1];
     const verified = jwt.verify(token, JWTSecret);
@@ -13,6 +14,6 @@ module.exports = (req, res, next) => {
 
     return next();
   } catch (error) {
-    return res.status(401).send({ error: 'Invalid token' });
+    return res.status(401).send({ error: invalidToken });
   }
 };
