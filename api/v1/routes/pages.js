@@ -19,11 +19,11 @@ const roleMiddleware = require('../middleware/roleMiddleware');
 router.get('/', findMany, errorHandler);
 router.post('/', authMiddleware, roleMiddleware('ADMINISTRATOR'), create, errorHandler);
 router.get('/export', dataExport, errorHandler);
-router.get('/:slug', findUnique, errorHandler);
-router.patch('/:slug', authMiddleware, roleMiddleware('ADMINISTRATOR'), update, errorHandler);
-router.delete('/:slug', authMiddleware, roleMiddleware('ADMINISTRATOR'), dele, errorHandler);
+router.get('/:id', findUnique, errorHandler);
+router.patch('/:id', authMiddleware, roleMiddleware('ADMINISTRATOR'), update, errorHandler);
+router.delete('/:id', authMiddleware, roleMiddleware('ADMINISTRATOR'), dele, errorHandler);
 router.post(
-  '/:slug/upload-banner',
+  '/:id/upload-banner',
   authMiddleware,
   roleMiddleware('ADMINISTRATOR'),
   hasResource,
@@ -34,7 +34,7 @@ router.post(
 );
 
 router.post(
-  '/:slug/upload-thumbnail',
+  '/:id/upload-thumbnail',
   authMiddleware,
   roleMiddleware('ADMINISTRATOR'),
   hasResource,

@@ -90,23 +90,33 @@ enum Gender {
 
 // ---------- CMS ---------- //
 model Page {
-  id              Int      @id @default(autoincrement())
-  slug            String   @unique
-  title           String
-  content         String   @db.Text()
-  readTime        Int      @default(0)
-  metaTitle       String?
-  metaDescription String?  @db.Text()
-  metaKeywords    String?
-  thumbnail       String?
-  banner          String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  // NOTE: I didn't add createdBy and updatedBy to the User model, but you can if you want
-  createdBy       String?
-  updatedBy       String?
+  id               Int               @id @default(autoincrement())
+  thumbnail        String?
+  banner           String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  createdBy        String?
+  updatedBy        String?
+  pageTranslations PageTranslation[]
 
   @@map(name: "page")
+}
+
+model PageTranslation {
+  id              Int     @id @default(autoincrement())
+  slug            String  @unique
+  title           String
+  content         String  @db.Text()
+  readTime        Int     @default(0)
+  metaTitle       String?
+  metaDescription String? @db.Text()
+  metaKeywords    String?
+  locale          String
+  page            Page    @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  pageId          Int
+
+  @@unique([slug, locale])
+  @@map(name: "page_translation")
 }
 
 model BlogCategory {

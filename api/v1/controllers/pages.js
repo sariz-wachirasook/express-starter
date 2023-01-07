@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs');
+const _ = require('lodash');
 const {
   getPagination,
   monthDayYearFormat,
@@ -13,66 +14,90 @@ const { notFoundMessage } = require('../messages/systemMessages');
 
 const selectList = {
   select: {
-    slug: true,
-    title: true,
-    readTime: true,
+    id: true,
     thumbnail: true,
     createdAt: true,
     createdBy: true,
+
+    pageTranslations: {
+      select: {
+        locale: true,
+        slug: true,
+        title: true,
+        readTime: true,
+      },
+    },
   },
 };
 
 const selectDetail = {
   select: {
-    slug: true,
-    title: true,
-    content: true,
-    readTime: true,
-    metaTitle: true,
-    metaDescription: true,
-    metaKeywords: true,
+    id: true,
     banner: true,
     thumbnail: true,
     createdAt: true,
     updatedAt: true,
     createdBy: true,
     updatedBy: true,
+
+    pageTranslations: {
+      select: {
+        id: true,
+        locale: true,
+        slug: true,
+        title: true,
+        content: true,
+        readTime: true,
+        metaTitle: true,
+        metaDescription: true,
+        metaKeywords: true,
+      },
+    },
   },
 };
 
 module.exports = {
   create: async (req, res, next) => {
     try {
-      const { title, content, slug, metaTitle, metaDescription, metaKeywords } = req.body;
+      const { pageTranslations } = req.body;
       const { email } = req.user;
 
-      if (!title || !content) return res.status(400).send({ message: 'All fields are required' });
+      const translations = await Promise.all(
+        pageTranslations.map(async (pageTranslation) => {
+          const { title, content } = pageTranslation;
+          let slug = slugify(title);
 
-      let newSlug = slugify(slug || title);
+          const existingSlug = await prisma.pageTranslation.findUnique({
+            where: {
+              slug,
+            },
+          });
 
-      const existingSlug = await prisma.page.findUnique({
-        where: {
-          slug: newSlug,
-        },
-      });
+          if (existingSlug) {
+            slug = `${slug}-${Date.now()}`;
+          }
 
-      if (existingSlug) {
-        newSlug = `${newSlug}-${Date.now()}`;
-      }
+          const readTime = getAverageReadingSpeed(content);
 
-      const readTime = getAverageReadingSpeed(content);
+          return {
+            ...pageTranslation,
+            slug,
+            readTime,
+          };
+        }),
+      );
 
       const data = await prisma.page.create({
         data: {
-          slug: newSlug,
-          title,
-          content,
           createdBy: email,
           updatedBy: email,
-          readTime,
-          metaTitle,
-          metaDescription,
-          metaKeywords,
+
+          pageTranslations: {
+            createMany: {
+              skipDuplicates: true,
+              data: translations,
+            },
+          },
         },
         ...selectDetail,
       });
@@ -85,15 +110,27 @@ module.exports = {
 
   findMany: async (req, res, next) => {
     try {
+      const acceptLanguage = req.headers['accept-language'];
+
       const pagination = getPagination(req.query);
 
       const total = await prisma.page.count();
+
       const data = await prisma.page.findMany({
         ...pagination,
         orderBy: {
           createdAt: 'desc',
         },
-        ...selectList,
+
+        ..._.merge(selectList, {
+          select: {
+            pageTranslations: {
+              where: {
+                locale: acceptLanguage || undefined,
+              },
+            },
+          },
+        }),
       });
 
       res.send({ total, data });
@@ -104,13 +141,23 @@ module.exports = {
 
   findUnique: async (req, res, next) => {
     try {
-      const { slug } = req.params;
+      const acceptLanguage = req.headers['accept-language'];
 
-      const data = await prisma.page.findUnique({
+      const { id } = req.params;
+
+      const data = await prisma.page.findFirst({
         where: {
-          slug,
+          id: parseInt(id, 10),
         },
-        ...selectDetail,
+        ..._.merge(selectDetail, {
+          select: {
+            pageTranslations: {
+              where: {
+                locale: acceptLanguage || undefined,
+              },
+            },
+          },
+        }),
       });
 
       if (!data) return res.status(404).send({ message: notFoundMessage });
@@ -218,14 +265,14 @@ module.exports = {
 
   uploadBanner: async (req, res, next) => {
     try {
-      const { slug } = req.params;
+      const { id } = req.params;
       const { file } = req;
 
       if (!file) return res.status(400).send({ message: 'File is required' });
 
       const existingPage = await prisma.page.findUnique({
         where: {
-          slug,
+          id: parseInt(id, 10),
         },
         select: {
           banner: true,
@@ -241,7 +288,7 @@ module.exports = {
 
       const data = await prisma.page.update({
         where: {
-          slug,
+          id,
         },
         data: {
           banner: file.path,
@@ -259,14 +306,14 @@ module.exports = {
 
   uploadThumbnail: async (req, res, next) => {
     try {
-      const { slug } = req.params;
+      const { id } = req.params;
       const { file } = req;
 
       if (!file) return res.status(400).send({ message: 'File is required' });
 
       const existingPage = await prisma.page.findUnique({
         where: {
-          slug,
+          id: parseInt(id, 10),
         },
         select: {
           thumbnail: true,
@@ -282,7 +329,7 @@ module.exports = {
 
       const data = await prisma.page.update({
         where: {
-          slug,
+          id: parseInt(id, 10),
         },
         data: {
           thumbnail: file.path,
@@ -300,32 +347,77 @@ module.exports = {
 
   update: async (req, res, next) => {
     try {
-      const { slug } = req.params;
-      const { title, content, metaTitle, metaDescription } = req.body;
+      const { id } = req.params;
+      const { pageTranslations } = req.body;
       const { email } = req.user;
-
-      if (!title || !content) return res.status(400).send({ message: 'All fields are required' });
 
       const existingPage = await prisma.page.findUnique({
         where: {
-          slug,
+          id: parseInt(id, 10),
         },
       });
 
       if (!existingPage) return res.status(404).send({ message: notFoundMessage });
 
-      const readTime = getAverageReadingSpeed(content);
+      const translations = await Promise.all(
+        pageTranslations.map(async (pageTranslation) => {
+          const { title, content } = pageTranslation;
+
+          console.log(pageTranslation.id);
+
+          if (!title || !content) {
+            return res.status(400).send({ message: 'All fields are required' });
+          }
+
+          let slug = slugify(title);
+
+          const existingSlug = await prisma.pageTranslation.findUnique({
+            where: {
+              slug,
+            },
+          });
+
+          if (existingSlug) {
+            slug = `${slug}-${Date.now()}`;
+          }
+
+          const readTime = getAverageReadingSpeed(content);
+
+          return {
+            ...pageTranslation,
+            slug,
+            readTime,
+          };
+        }),
+      );
+
+      await Promise.all(
+        translations.map(async (translation) => {
+          const newTranslation = JSON.parse(JSON.stringify(translation));
+          if (newTranslation.id) delete newTranslation.id;
+
+          await prisma.pageTranslation.upsert({
+            where: {
+              id: parseInt(translation.id, 10) || -1,
+            },
+            create: {
+              ...newTranslation,
+              page: {
+                connect: {
+                  id: parseInt(id, 10),
+                },
+              },
+            },
+            update: translation,
+          });
+        }),
+      );
 
       const data = await prisma.page.update({
         where: {
-          slug,
+          id: parseInt(id, 10),
         },
         data: {
-          title,
-          content,
-          readTime,
-          metaTitle,
-          metaDescription,
           updatedBy: email,
         },
         ...selectDetail,
@@ -339,11 +431,11 @@ module.exports = {
 
   delete: async (req, res, next) => {
     try {
-      const { slug } = req.params;
+      const { id } = req.params;
 
       const existingPage = await prisma.page.findUnique({
         where: {
-          slug,
+          id: parseInt(id, 10),
         },
       });
 
@@ -351,7 +443,7 @@ module.exports = {
 
       await prisma.page.delete({
         where: {
-          slug,
+          id: parseInt(id, 10),
         },
       });
 
