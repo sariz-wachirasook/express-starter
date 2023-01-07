@@ -361,9 +361,35 @@ module.exports = {
 
       const translations = await Promise.all(
         pageTranslations.map(async (pageTranslation) => {
-          const { title, content } = pageTranslation;
+          // ---------------------------
+          let newId;
+          if (pageTranslation.id) {
+            const existingTranslation = await prisma.pageTranslation.findFirst({
+              where: {
+                id: pageTranslation.id,
+                pageId: parseInt(id, 10),
+              },
+            });
 
-          console.log(pageTranslation.id);
+            if (!existingTranslation) {
+              return res
+                .status(404)
+                .send({ message: notFoundMessage, translationId: pageTranslation.id });
+            }
+          } else {
+            const existingTranslation = await prisma.pageTranslation.findFirst({
+              where: {
+                locale: pageTranslation.locale,
+                pageId: parseInt(id, 10),
+              },
+            });
+
+            if (existingTranslation) {
+              newId = existingTranslation.id;
+            }
+          }
+          // ---------------------------
+          const { title, content } = pageTranslation;
 
           if (!title || !content) {
             return res.status(400).send({ message: 'All fields are required' });
@@ -387,6 +413,7 @@ module.exports = {
             ...pageTranslation,
             slug,
             readTime,
+            id: newId,
           };
         }),
       );
