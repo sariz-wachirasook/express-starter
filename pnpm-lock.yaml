@@ -1,39 +1,41 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@prisma/client': ^4.8.0
+  '@prisma/client': ^4.8.1
   bcrypt: ^5.1.0
   concurrently: ^7.6.0
   cors: ^2.8.5
   cron: ^2.1.0
   csv-writer: ^1.6.0
-  eslint: ^8.30.0
+  eslint: ^8.31.0
   eslint-config-airbnb-base: ^15.0.0
   eslint-plugin-import: ^2.26.0
   express: ^4.18.2
-  husky: ^8.0.2
-  jsdom: ^20.0.3
+  husky: ^8.0.3
+  jsdom: ^21.0.0
   jsonwebtoken: ^9.0.0
+  lodash: ^4.17.21
   moment: ^2.29.4
   multer: 1.4.5-lts.1
   nodemailer: ^6.8.0
   nodemon: ^2.0.20
   npm-check-updates: ^16.6.2
   pm2: ^5.2.2
-  prisma: ^4.8.0
+  prisma: ^4.8.1
   sharp: ^0.31.3
   slugify: ^1.6.5
   xlsx: ^0.18.5
 
 dependencies:
-  '@prisma/client': 4.8.0_prisma@4.8.0
+  '@prisma/client': 4.8.1_prisma@4.8.1
   bcrypt: 5.1.0
   cors: 2.8.5
   cron: 2.1.0
   csv-writer: 1.6.0
   express: 4.18.2
-  jsdom: 20.0.3
+  jsdom: 21.0.0
   jsonwebtoken: 9.0.0
+  lodash: 4.17.21
   moment: 2.29.4
   multer: 1.4.5-lts.1
   nodemailer: 6.8.0
@@ -43,19 +45,19 @@ dependencies:
 
 devDependencies:
   concurrently: 7.6.0
-  eslint: 8.30.0
-  eslint-config-airbnb-base: 15.0.0_2lbwmhbr7bncddqbzzpg77o75m
-  eslint-plugin-import: 2.26.0_eslint@8.30.0
-  husky: 8.0.2
+  eslint: 8.31.0
+  eslint-config-airbnb-base: 15.0.0_ol7jqilc3wemtdbq3nzhywgxq4
+  eslint-plugin-import: 2.26.0_eslint@8.31.0
+  husky: 8.0.3
   nodemon: 2.0.20
   npm-check-updates: 16.6.2
   pm2: 5.2.2
-  prisma: 4.8.0
+  prisma: 4.8.1
 
 packages:
 
-  /@eslint/eslintrc/1.4.0:
-    resolution: {integrity: sha512-7yfvXy6MWLgWSFsLhz5yH3iQ52St8cdUY6FoGieKkRDVxuxmrNuUetIuu6cmjNWwniUHiWXjxCr5tTXDrbYS5A==}
+  /@eslint/eslintrc/1.4.1:
+    resolution: {integrity: sha512-XXrH9Uarn0stsyldqDYq8r++mROmWRI1xKMXa640Bb//SY1+ECYX6VzT6Lcx5frD0V30XieqJ0oX9I2Xj5aoMA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dependencies:
       ajv: 6.12.6
@@ -318,8 +320,8 @@ packages:
       config-chain: 1.1.13
     dev: true
 
-  /@prisma/client/4.8.0_prisma@4.8.0:
-    resolution: {integrity: sha512-Y1riB0p2W52kh3zgssP/YAhln3RjBFcJy3uwEiyjmU+TQYh6QTZDRFBo3JtBWuq2FyMOl1Rye8jxzUP+n0l5Cg==}
+  /@prisma/client/4.8.1_prisma@4.8.1:
+    resolution: {integrity: sha512-d4xhZhETmeXK/yZ7K0KcVOzEfI5YKGGEr4F5SBV04/MU4ncN/HcE28sy3e4Yt8UFW0ZuImKFQJE+9rWt9WbGSQ==}
     engines: {node: '>=14.17'}
     requiresBuild: true
     peerDependencies:
@@ -329,15 +331,15 @@ packages:
         optional: true
     dependencies:
       '@prisma/engines-version': 4.8.0-61.d6e67a83f971b175a593ccc12e15c4a757f93ffe
-      prisma: 4.8.0
+      prisma: 4.8.1
     dev: false
 
   /@prisma/engines-version/4.8.0-61.d6e67a83f971b175a593ccc12e15c4a757f93ffe:
     resolution: {integrity: sha512-MHSOSexomRMom8QN4t7bu87wPPD+pa+hW9+71JnVcF3DqyyO/ycCLhRL1we3EojRpZxKvuyGho2REQsMCvxcJw==}
     dev: false
 
-  /@prisma/engines/4.8.0:
-    resolution: {integrity: sha512-A1Asn2rxZMlLAj1HTyfaCv0VQrLUv034jVay05QlqZg1qiHPeA3/pGTfNMijbsMYCsGVxfWEJuaZZuNxXGMCrA==}
+  /@prisma/engines/4.8.1:
+    resolution: {integrity: sha512-93tctjNXcIS+i/e552IO6tqw17sX8liivv8WX9lDMCpEEe3ci+nT9F+1oHtAafqruXLepKF80i/D20Mm+ESlOw==}
     requiresBuild: true
 
   /@sindresorhus/is/5.3.0:
@@ -1428,7 +1430,7 @@ packages:
       source-map: 0.6.1
     dev: false
 
-  /eslint-config-airbnb-base/15.0.0_2lbwmhbr7bncddqbzzpg77o75m:
+  /eslint-config-airbnb-base/15.0.0_ol7jqilc3wemtdbq3nzhywgxq4:
     resolution: {integrity: sha512-xaX3z4ZZIcFLvh2oUNvcX5oEofXda7giYmuplVxoOg5A7EXJMrUyqRgR+mhDhPK8LZ4PttFOBvCYDbX3sUoUig==}
     engines: {node: ^10.12.0 || >=12.0.0}
     peerDependencies:
@@ -1436,8 +1438,8 @@ packages:
       eslint-plugin-import: ^2.25.2
     dependencies:
       confusing-browser-globals: 1.0.11
-      eslint: 8.30.0
-      eslint-plugin-import: 2.26.0_eslint@8.30.0
+      eslint: 8.31.0
+      eslint-plugin-import: 2.26.0_eslint@8.31.0
       object.assign: 4.1.4
       object.entries: 1.1.6
       semver: 6.3.0
@@ -1452,7 +1454,7 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-module-utils/2.7.4_dc7heojkjdjw5ttc65wer4jauy:
+  /eslint-module-utils/2.7.4_rahvyjeqqlq6ogimp3cp7kgkfq:
     resolution: {integrity: sha512-j4GT+rqzCoRKHwURX7pddtIPGySnX9Si/cgMI5ztrcqOPtk5dDEeZ34CQVPphnqkJytlc97Vuk05Um2mJ3gEQA==}
     engines: {node: '>=4'}
     peerDependencies:
@@ -1474,13 +1476,13 @@ packages:
         optional: true
     dependencies:
       debug: 3.2.7
-      eslint: 8.30.0
+      eslint: 8.31.0
       eslint-import-resolver-node: 0.3.6
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /eslint-plugin-import/2.26.0_eslint@8.30.0:
+  /eslint-plugin-import/2.26.0_eslint@8.31.0:
     resolution: {integrity: sha512-hYfi3FXaM8WPLf4S1cikh/r4IxnO6zrhZbEGz2b660EJRbuxgpDS5gkCuYgGWg2xxh2rBuIr4Pvhve/7c31koA==}
     engines: {node: '>=4'}
     peerDependencies:
@@ -1494,9 +1496,9 @@ packages:
       array.prototype.flat: 1.3.1
       debug: 2.6.9
       doctrine: 2.1.0
-      eslint: 8.30.0
+      eslint: 8.31.0
       eslint-import-resolver-node: 0.3.6
-      eslint-module-utils: 2.7.4_dc7heojkjdjw5ttc65wer4jauy
+      eslint-module-utils: 2.7.4_rahvyjeqqlq6ogimp3cp7kgkfq
       has: 1.0.3
       is-core-module: 2.11.0
       is-glob: 4.0.3
@@ -1518,13 +1520,13 @@ packages:
       estraverse: 5.3.0
     dev: true
 
-  /eslint-utils/3.0.0_eslint@8.30.0:
+  /eslint-utils/3.0.0_eslint@8.31.0:
     resolution: {integrity: sha512-uuQC43IGctw68pJA1RgbQS8/NP7rch6Cwd4j3ZBtgo4/8Flj4eGE7ZYSZRN3iq5pVUv6GPdW5Z1RFleo84uLDA==}
     engines: {node: ^10.0.0 || ^12.0.0 || >= 14.0.0}
     peerDependencies:
       eslint: '>=5'
     dependencies:
-      eslint: 8.30.0
+      eslint: 8.31.0
       eslint-visitor-keys: 2.1.0
     dev: true
 
@@ -1538,12 +1540,12 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
 
-  /eslint/8.30.0:
-    resolution: {integrity: sha512-MGADB39QqYuzEGov+F/qb18r4i7DohCDOfatHaxI2iGlPuC65bwG2gxgO+7DkyL38dRFaRH7RaRAgU6JKL9rMQ==}
+  /eslint/8.31.0:
+    resolution: {integrity: sha512-0tQQEVdmPZ1UtUKXjX7EMm9BlgJ08G90IhWh0PKDCb3ZLsgAOHI8fYSIzYVZej92zsgq+ft0FGsxhJ3xo2tbuA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     hasBin: true
     dependencies:
-      '@eslint/eslintrc': 1.4.0
+      '@eslint/eslintrc': 1.4.1
       '@humanwhocodes/config-array': 0.11.8
       '@humanwhocodes/module-importer': 1.0.1
       '@nodelib/fs.walk': 1.2.8
@@ -1554,7 +1556,7 @@ packages:
       doctrine: 3.0.0
       escape-string-regexp: 4.0.0
       eslint-scope: 7.1.1
-      eslint-utils: 3.0.0_eslint@8.30.0
+      eslint-utils: 3.0.0_eslint@8.31.0
       eslint-visitor-keys: 3.3.0
       espree: 9.4.1
       esquery: 1.4.0
@@ -2198,8 +2200,8 @@ packages:
       ms: 2.1.3
     dev: true
 
-  /husky/8.0.2:
-    resolution: {integrity: sha512-Tkv80jtvbnkK3mYWxPZePGFpQ/tT3HNSs/sasF9P2YfkMezDl3ON37YN6jUUI4eTg5LcyVynlb6r4eyvOmspvg==}
+  /husky/8.0.3:
+    resolution: {integrity: sha512-+dQSyqPh4x1hlO1swXBiNb2HzTDN1I2IGLQx1GrBuiqFJfoMrnZWwVmatvSiO+Iz8fBUnf+lekwNo4c2LlXItg==}
     engines: {node: '>=14'}
     hasBin: true
     dev: true
@@ -2500,8 +2502,8 @@ packages:
       argparse: 2.0.1
     dev: true
 
-  /jsdom/20.0.3:
-    resolution: {integrity: sha512-SYhBvTh89tTfCD/CRdSOm13mOBa42iTaTyfyEWBdKcGdPxPtLFBXuHR8XHb33YNYaP+lLbmSvBTsnoesCNJEsQ==}
+  /jsdom/21.0.0:
+    resolution: {integrity: sha512-AIw+3ZakSUtDYvhwPwWHiZsUi3zHugpMEKlNPaurviseYoBqo0zBd3zqoUi3LPCNtPFlEP8FiW9MqCZdjb2IYA==}
     engines: {node: '>=14'}
     peerDependencies:
       canvas: ^2.5.0
@@ -3585,13 +3587,13 @@ packages:
     engines: {node: '>= 0.8.0'}
     dev: true
 
-  /prisma/4.8.0:
-    resolution: {integrity: sha512-DWIhxvxt8f4h6MDd35mz7BJff+fu7HItW3WPDIEpCR3RzcOWyiHBbLQW5/DOgmf+pRLTjwXQob7kuTZVYUAw5w==}
+  /prisma/4.8.1:
+    resolution: {integrity: sha512-ZMLnSjwulIeYfaU1O6/LF6PEJzxN5par5weykxMykS9Z6ara/j76JH3Yo2AH3bgJbPN4Z6NeCK9s5fDkzf33cg==}
     engines: {node: '>=14.17'}
     hasBin: true
     requiresBuild: true
     dependencies:
-      '@prisma/engines': 4.8.0
+      '@prisma/engines': 4.8.1
 
   /proc-log/3.0.0:
     resolution: {integrity: sha512-++Vn7NS4Xf9NacaU9Xq3URUuqZETPsf8L4j5/ckhaRYsfPeRyzGw+iDjFhV/Jr3uNmTvvddEJFWh5R1gRgUH8A==}
