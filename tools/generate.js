@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt');
+
 const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
@@ -8,14 +10,14 @@ const init = async () => {
   // create default locale
   const defaultLocale = await prisma.locale.findUnique({
     where: {
-      code: 'en',
+      code: 'en_US',
     },
   });
 
   if (!defaultLocale) {
     await prisma.locale.create({
       data: {
-        code: 'en',
+        code: 'en_US',
         name: 'English',
       },
     });
@@ -36,11 +38,13 @@ const init = async () => {
       return;
     }
 
+    const hashedPassword = await bcrypt.hash(env.ADMIN_PASSWORD, 10);
+
     await prisma.user.create({
       data: {
         name: env.ADMIN_NAME,
         email: env.ADMIN_EMAIL,
-        password: env.ADMIN_PASSWORD,
+        password: hashedPassword,
         role: 'ADMINISTRATOR',
       },
     });
