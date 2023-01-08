@@ -1,4 +1,8 @@
-const { resetPasswordURL, resetPasswordExpires, appName } = require('../configs/env');
+const {
+  resetPasswordURL,
+  resetPasswordExpires,
+  appName,
+} = require('../configs/env');
 const sendEmail = require('../configs/nodemailer');
 
 module.exports = (email, name, token) => {

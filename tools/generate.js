@@ -31,7 +31,7 @@ const init = async () => {
   if (!defaultUser) {
     if (!env.ADMIN_NAME || !env.ADMIN_EMAIL || !env.ADMIN_PASSWORD) {
       console.error(
-        'Admin user not created. Please provide ADMIN_NAME, ADMIN_EMAIL and ADMIN_PASSWORD in .env file',
+        'Admin user not created. Please provide ADMIN_NAME, ADMIN_EMAIL and ADMIN_PASSWORD in .env file'
       );
       return;
     }

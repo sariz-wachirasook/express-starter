@@ -52,11 +52,13 @@ const selectDetail = {
 module.exports = {
   create: async (req, res, next) => {
     try {
-      const { title, content, slug, metaTitle, metaDescription, metaKeywords } = req.body;
+      const { title, content, slug, metaTitle, metaDescription, metaKeywords } =
+        req.body;
       const { blogCategories } = req.body;
       const { email } = req.user;
 
-      if (!title || !content) return res.status(400).send({ message: 'All fields are required' });
+      if (!title || !content)
+        return res.status(400).send({ message: 'All fields are required' });
 
       let newSlug = slugify(slug || title);
 
@@ -171,7 +173,8 @@ module.exports = {
         },
       });
 
-      if (!existingBlog) return res.status(404).send({ message: notFoundMessage });
+      if (!existingBlog)
+        return res.status(404).send({ message: notFoundMessage });
 
       if (existingBlog.banner) {
         const filePath = path.join('public', existingBlog.banner);
@@ -212,7 +215,8 @@ module.exports = {
         },
       });
 
-      if (!existingBlog) return res.status(404).send({ message: notFoundMessage });
+      if (!existingBlog)
+        return res.status(404).send({ message: notFoundMessage });
 
       if (existingBlog.thumbnail) {
         const filePath = path.join('public', existingBlog.thumbnail);
@@ -251,7 +255,9 @@ module.exports = {
       const flattenedData = data.map((item) => ({
         slug: item.slug,
         title: item.title,
-        blogCategories: item.blogCategories.map((category) => category.name).join(', '),
+        blogCategories: item.blogCategories
+          .map((category) => category.name)
+          .join(', '),
         content: item.content,
         readTime: item.readTime,
         metaTitle: item.metaTitle,
@@ -281,9 +287,12 @@ module.exports = {
           ]);
           res.setHeader(
             'Content-Type',
-            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
           );
-          res.setHeader('Content-Disposition', 'attachment; filename=blogs.xlsx');
+          res.setHeader(
+            'Content-Disposition',
+            'attachment; filename=blogs.xlsx'
+          );
           res.send(workbook);
           break;
         }
@@ -303,7 +312,10 @@ module.exports = {
             { id: 'updatedAt', title: 'Updated At' },
             { id: 'updatedBy', title: 'Updated By' },
           ]);
-          res.setHeader('Content-Disposition', 'attachment; filename=blogs.csv');
+          res.setHeader(
+            'Content-Disposition',
+            'attachment; filename=blogs.csv'
+          );
           res.setHeader('Content-Type', 'text/csv');
           res.send(csv);
           break;
@@ -317,10 +329,18 @@ module.exports = {
   update: async (req, res, next) => {
     try {
       const { slug } = req.params;
-      const { title, content, metaTitle, metaDescription, metaKeywords, blogCategories } = req.body;
+      const {
+        title,
+        content,
+        metaTitle,
+        metaDescription,
+        metaKeywords,
+        blogCategories,
+      } = req.body;
       const { email } = req.user;
 
-      if (!title || !content) return res.status(400).send({ message: 'All fields are required' });
+      if (!title || !content)
+        return res.status(400).send({ message: 'All fields are required' });
 
       const existingBlog = await prisma.blog.findUnique({
         where: {
@@ -328,7 +348,8 @@ module.exports = {
         },
       });
 
-      if (!existingBlog) return res.status(404).send({ message: notFoundMessage });
+      if (!existingBlog)
+        return res.status(404).send({ message: notFoundMessage });
 
       const readTime = getAverageReadingSpeed(content);
 
@@ -367,7 +388,8 @@ module.exports = {
         },
       });
 
-      if (!existingBlog) return res.status(404).send({ message: notFoundMessage });
+      if (!existingBlog)
+        return res.status(404).send({ message: notFoundMessage });
 
       await prisma.blog.delete({
         where: {

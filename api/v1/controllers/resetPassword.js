@@ -29,7 +29,8 @@ module.exports = {
         },
       });
 
-      if (!user) return res.status(200).send({ message: 'A request has been sent' });
+      if (!user)
+        return res.status(200).send({ message: 'A request has been sent' });
 
       await prisma.resetPasswordToken.deleteMany({
         where: {
@@ -37,12 +38,16 @@ module.exports = {
         },
       });
 
-      const token = jwt.sign({ email: user.email }, JWTSecret, { expiresIn: resetPasswordExpires });
+      const token = jwt.sign({ email: user.email }, JWTSecret, {
+        expiresIn: resetPasswordExpires,
+      });
 
       await prisma.resetPasswordToken.create({
         data: {
           token,
-          expiresAt: new Date(new Date().getTime() + parseInt(resetPasswordExpires, 10)),
+          expiresAt: new Date(
+            new Date().getTime() + parseInt(resetPasswordExpires, 10)
+          ),
           user: {
             connect: {
               id: user.id,
@@ -65,9 +70,12 @@ module.exports = {
       const { password, confirmPassword } = req.body;
 
       if (!token) return res.status(400).send({ message: 'Token is required' });
-      if (!password) return res.status(400).send({ message: 'Password is required' });
+      if (!password)
+        return res.status(400).send({ message: 'Password is required' });
       if (!confirmPassword) {
-        return res.status(400).send({ message: 'Confirm password is required' });
+        return res
+          .status(400)
+          .send({ message: 'Confirm password is required' });
       }
       if (password !== confirmPassword) {
         return res.status(400).send({ message: 'Passwords do not match' });
@@ -96,7 +104,8 @@ module.exports = {
         },
       });
 
-      if (!resetPasswordToken) return res.status(401).send({ message: invalidToken });
+      if (!resetPasswordToken)
+        return res.status(401).send({ message: invalidToken });
 
       const date = new Date();
 
@@ -106,7 +115,7 @@ module.exports = {
           role: resetPasswordToken.user.role,
         },
         JWTSecret,
-        { expiresIn: JWTExpires },
+        { expiresIn: JWTExpires }
       );
 
       await prisma.refreshToken.deleteMany({
@@ -117,10 +126,16 @@ module.exports = {
 
       const refreshToken = await prisma.refreshToken.create({
         data: {
-          token: jwt.sign({ email: resetPasswordToken.user.email }, JWTRefreshTokenSecret, {
-            expiresIn: JWTRefreshTokenExpires,
-          }),
-          expiresAt: new Date(date.setDate(date.getDate() + parseInt(JWTRefreshTokenExpires, 10))),
+          token: jwt.sign(
+            { email: resetPasswordToken.user.email },
+            JWTRefreshTokenSecret,
+            {
+              expiresIn: JWTRefreshTokenExpires,
+            }
+          ),
+          expiresAt: new Date(
+            date.setDate(date.getDate() + parseInt(JWTRefreshTokenExpires, 10))
+          ),
           user: {
             connect: {
               id: resetPasswordToken.user.id,

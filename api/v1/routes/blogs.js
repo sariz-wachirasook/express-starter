@@ -17,11 +17,29 @@ const errorHandler = require('../middleware/errorHandler');
 const roleMiddleware = require('../middleware/roleMiddleware');
 
 router.get('/', findMany, errorHandler);
-router.post('/', authMiddleware, roleMiddleware('ADMINISTRATOR'), create, errorHandler);
+router.post(
+  '/',
+  authMiddleware,
+  roleMiddleware('ADMINISTRATOR'),
+  create,
+  errorHandler
+);
 router.get('/export', dataExport, errorHandler);
 router.get('/:slug', findUnique, errorHandler);
-router.patch('/:slug', authMiddleware, roleMiddleware('ADMINISTRATOR'), update, errorHandler);
-router.delete('/:slug', authMiddleware, roleMiddleware('ADMINISTRATOR'), dele, errorHandler);
+router.patch(
+  '/:slug',
+  authMiddleware,
+  roleMiddleware('ADMINISTRATOR'),
+  update,
+  errorHandler
+);
+router.delete(
+  '/:slug',
+  authMiddleware,
+  roleMiddleware('ADMINISTRATOR'),
+  dele,
+  errorHandler
+);
 
 router.post(
   '/:slug/upload-banner',
@@ -31,7 +49,7 @@ router.post(
   upload.single('file'),
   sharp,
   uploadBanner,
-  errorHandler,
+  errorHandler
 );
 
 router.post(
@@ -42,7 +60,7 @@ router.post(
   upload.single('file'),
   sharp,
   uploadThumbnail,
-  errorHandler,
+  errorHandler
 );
 
 module.exports = router;

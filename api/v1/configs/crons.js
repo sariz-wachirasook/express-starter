@@ -1,5 +1,9 @@
 const cron = require('cron');
-const { deleteUser, deleteRefreshToken, deleteResetPasswordToken } = require('../commands/users');
+const {
+  deleteUser,
+  deleteRefreshToken,
+  deleteResetPasswordToken,
+} = require('../commands/users');
 
 const methods = {
   runEveryMinute: () => {

@@ -20,5 +20,6 @@ module.exports = {
 
   resetPasswordExpires: env.RESET_PASSWORD_EXPIRES || '1h',
   resetPasswordTokenLength: env.RESET_PASSWORD_TOKEN_LENGTH || 32,
-  resetPasswordURL: env.RESET_PASSWORD_URL || 'http://localhost:3000/reset-password',
+  resetPasswordURL:
+    env.RESET_PASSWORD_URL || 'http://localhost:3000/reset-password',
 };

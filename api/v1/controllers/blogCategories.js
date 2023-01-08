@@ -40,7 +40,8 @@ module.exports = {
         },
       });
 
-      if (existingSlug) return res.status(400).send({ message: slugAlreadyExists });
+      if (existingSlug)
+        return res.status(400).send({ message: slugAlreadyExists });
 
       const data = await prisma.blogCategory.create({
         data: {
@@ -109,7 +110,8 @@ module.exports = {
         ...selectDetail,
       });
 
-      if (!existingSlug) return res.status(404).send({ message: notFoundMessage });
+      if (!existingSlug)
+        return res.status(404).send({ message: notFoundMessage });
       if (existingSlug.slug === newSlug) {
         return res.status(400).send(existingSlug);
       }
@@ -120,7 +122,8 @@ module.exports = {
         },
       });
 
-      if (existingNewSlug) return res.status(400).send({ message: slugAlreadyExists });
+      if (existingNewSlug)
+        return res.status(400).send({ message: slugAlreadyExists });
 
       const data = await prisma.blogCategory.update({
         where: {
@@ -149,7 +152,8 @@ module.exports = {
         },
       });
 
-      if (!existingSlug) return res.status(404).send({ message: notFoundMessage });
+      if (!existingSlug)
+        return res.status(404).send({ message: notFoundMessage });
 
       await prisma.blogCategory.delete({
         where: {

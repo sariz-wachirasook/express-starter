@@ -1,5 +1,11 @@
 const bcrypt = require('bcrypt');
-const { getPagination, monthDayYearFormat, getCSV, getXLSX, getId } = require('../utils/utils');
+const {
+  getPagination,
+  monthDayYearFormat,
+  getCSV,
+  getXLSX,
+  getId,
+} = require('../utils/utils');
 const prisma = require('../configs/prisma');
 const { notFoundMessage } = require('../messages/systemMessages');
 const sendInformSoftDeleteAccountEmail = require('../mails/sendInformSoftDeleteAccountEmail');
@@ -145,9 +151,12 @@ module.exports = {
           ]);
           res.setHeader(
             'Content-Type',
-            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
           );
-          res.setHeader('Content-Disposition', 'attachment; filename=users.xlsx');
+          res.setHeader(
+            'Content-Disposition',
+            'attachment; filename=users.xlsx'
+          );
           res.send(workbook);
           break;
         }
@@ -159,7 +168,10 @@ module.exports = {
             { id: 'createdAt', title: 'Created At' },
             { id: 'isSubscribed', title: 'Subscribed to Newsletter' },
           ]);
-          res.setHeader('Content-Disposition', 'attachment; filename=users.csv');
+          res.setHeader(
+            'Content-Disposition',
+            'attachment; filename=users.csv'
+          );
           res.setHeader('Content-Type', 'text/csv');
           res.send(csv);
           break;
@@ -219,7 +231,11 @@ module.exports = {
       const today = new Date();
 
       // next 30 days start from 12:00 AM
-      const next30Day = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 30);
+      const next30Day = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate() + 30
+      );
 
       const data = await prisma.user.update({
         where: {

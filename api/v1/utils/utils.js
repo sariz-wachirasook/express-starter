@@ -18,7 +18,8 @@ module.exports = {
   getAverageReadingSpeed: (text) => {
     const html = `<div id="editor">${text}</div>`;
     const dom = new JSDOM(html);
-    const editorContent = dom.window.document.getElementById('editor').textContent;
+    const editorContent =
+      dom.window.document.getElementById('editor').textContent;
     const words = editorContent.split(' ').length;
     const minutes = words / 200;
 
@@ -40,14 +41,19 @@ module.exports = {
 
   getCSV: (data, fields) => {
     const csvStringifier = createCsvWriter({ header: fields });
-    return csvStringifier.getHeaderString() + csvStringifier.stringifyRecords(data);
+    return (
+      csvStringifier.getHeaderString() + csvStringifier.stringifyRecords(data)
+    );
   },
 
   getXLSX: (data, fields, name) => {
     const workbook = XLSX.utils.book_new();
     const worksheet = XLSX.utils.json_to_sheet([]);
     XLSX.utils.sheet_add_aoa(worksheet, [fields]);
-    XLSX.utils.sheet_add_json(worksheet, data, { origin: 'A2', skipHeader: true });
+    XLSX.utils.sheet_add_json(worksheet, data, {
+      origin: 'A2',
+      skipHeader: true,
+    });
     XLSX.utils.book_append_sheet(workbook, worksheet, name || 'Sheet1');
     return XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
   },

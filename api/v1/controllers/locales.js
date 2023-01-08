@@ -30,7 +30,8 @@ module.exports = {
     try {
       const { code, name } = req.body;
 
-      if (!code || !name) return res.status(400).send({ message: allFieldsRequired });
+      if (!code || !name)
+        return res.status(400).send({ message: allFieldsRequired });
 
       const existingData = await prisma.locale.findUnique({
         where: {
@@ -38,7 +39,8 @@ module.exports = {
         },
       });
 
-      if (existingData) return res.status(400).send({ message: codeAlreadyExists });
+      if (existingData)
+        return res.status(400).send({ message: codeAlreadyExists });
 
       const data = await prisma.locale.create({
         data: {
@@ -96,7 +98,8 @@ module.exports = {
       const id = getId(req.params);
       const { code, name } = req.body;
 
-      if (!code || !name) return res.status(400).send({ message: allFieldsRequired });
+      if (!code || !name)
+        return res.status(400).send({ message: allFieldsRequired });
 
       const existingData = await prisma.locale.findUnique({
         where: {
@@ -111,7 +114,8 @@ module.exports = {
         },
       });
 
-      if (!existingData) return res.status(404).send({ message: notFoundMessage });
+      if (!existingData)
+        return res.status(404).send({ message: notFoundMessage });
       if (existingCode && existingCode.id !== id) {
         return res.status(400).send({ message: codeAlreadyExists });
       }
@@ -143,7 +147,8 @@ module.exports = {
         },
       });
 
-      if (!existingSlug) return res.status(404).send({ message: notFoundMessage });
+      if (!existingSlug)
+        return res.status(404).send({ message: notFoundMessage });
 
       await prisma.locale.delete({
         where: {

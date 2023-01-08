@@ -29,7 +29,8 @@ module.exports = {
       if (!user) res.status(401).send({ message: 'Invalid email or password' });
 
       const isPasswordValid = await bcrypt.compare(password, user.password);
-      if (!isPasswordValid) res.status(401).send({ message: 'Invalid email or password' });
+      if (!isPasswordValid)
+        res.status(401).send({ message: 'Invalid email or password' });
 
       const date = new Date();
       const token = jwt.sign(
@@ -38,12 +39,16 @@ module.exports = {
           role: user.role,
         },
         JWTSecret,
-        { expiresIn: JWTExpires },
+        { expiresIn: JWTExpires }
       );
 
-      const refreshToken = jwt.sign({ email: user.email }, JWTRefreshTokenSecret, {
-        expiresIn: JWTRefreshTokenExpires,
-      });
+      const refreshToken = jwt.sign(
+        { email: user.email },
+        JWTRefreshTokenSecret,
+        {
+          expiresIn: JWTRefreshTokenExpires,
+        }
+      );
 
       await prisma.refreshToken.upsert({
         where: {
@@ -51,7 +56,9 @@ module.exports = {
         },
         create: {
           token: refreshToken,
-          expiresAt: new Date(date.setDate(date.getDate() + parseInt(JWTRefreshTokenExpires, 10))),
+          expiresAt: new Date(
+            date.setDate(date.getDate() + parseInt(JWTRefreshTokenExpires, 10))
+          ),
           user: {
             connect: {
               id: user.id,
@@ -60,7 +67,9 @@ module.exports = {
         },
         update: {
           token: refreshToken,
-          expiresAt: new Date(date.setDate(date.getDate() + parseInt(JWTRefreshTokenExpires, 10))),
+          expiresAt: new Date(
+            date.setDate(date.getDate() + parseInt(JWTRefreshTokenExpires, 10))
+          ),
         },
       });
 
@@ -80,7 +89,8 @@ module.exports = {
         },
       });
 
-      if (existingUser) return res.status(400).send({ message: 'Email is already in use' });
+      if (existingUser)
+        return res.status(400).send({ message: 'Email is already in use' });
 
       const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -129,14 +139,20 @@ module.exports = {
         },
       });
 
-      if (!token) return res.status(401).send({ message: 'Invalid refresh token' });
+      if (!token)
+        return res.status(401).send({ message: 'Invalid refresh token' });
 
       const date = new Date();
-      if (date > token.expiresAt) return res.status(401).send({ message: 'Refresh token expired' });
+      if (date > token.expiresAt)
+        return res.status(401).send({ message: 'Refresh token expired' });
 
-      const newToken = jwt.sign({ email: token.user.email, role: token.user.role }, JWTSecret, {
-        expiresIn: JWTExpires,
-      });
+      const newToken = jwt.sign(
+        { email: token.user.email, role: token.user.role },
+        JWTSecret,
+        {
+          expiresIn: JWTExpires,
+        }
+      );
       const newRefreshToken = await prisma.refreshToken.update({
         where: {
           id: token.id,
@@ -145,7 +161,9 @@ module.exports = {
           token: jwt.sign({ email: token.user.email }, JWTRefreshTokenSecret, {
             expiresIn: JWTRefreshTokenExpires,
           }),
-          expiresAt: new Date(date.setDate(date.getDate() + parseInt(JWTRefreshTokenExpires, 10))),
+          expiresAt: new Date(
+            date.setDate(date.getDate() + parseInt(JWTRefreshTokenExpires, 10))
+          ),
         },
       });
 

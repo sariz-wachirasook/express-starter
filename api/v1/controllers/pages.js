@@ -84,7 +84,7 @@ module.exports = {
             slug,
             readTime,
           };
-        }),
+        })
       );
 
       const data = await prisma.page.create({
@@ -231,9 +231,12 @@ module.exports = {
           ]);
           res.setHeader(
             'Content-Type',
-            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
           );
-          res.setHeader('Content-Disposition', 'attachment; filename=pages.xlsx');
+          res.setHeader(
+            'Content-Disposition',
+            'attachment; filename=pages.xlsx'
+          );
           res.send(workbook);
           break;
         }
@@ -252,7 +255,10 @@ module.exports = {
             { id: 'updatedAt', title: 'Updated At' },
             { id: 'updatedBy', title: 'Updated By' },
           ]);
-          res.setHeader('Content-Disposition', 'attachment; filename=pages.csv');
+          res.setHeader(
+            'Content-Disposition',
+            'attachment; filename=pages.csv'
+          );
           res.setHeader('Content-Type', 'text/csv');
           res.send(csv);
           break;
@@ -279,7 +285,8 @@ module.exports = {
         },
       });
 
-      if (!existingPage) return res.status(404).send({ message: notFoundMessage });
+      if (!existingPage)
+        return res.status(404).send({ message: notFoundMessage });
 
       if (existingPage.banner) {
         const filePath = path.join('public', existingPage.banner);
@@ -320,7 +327,8 @@ module.exports = {
         },
       });
 
-      if (!existingPage) return res.status(404).send({ message: notFoundMessage });
+      if (!existingPage)
+        return res.status(404).send({ message: notFoundMessage });
 
       if (existingPage.thumbnail) {
         const filePath = path.join('public', existingPage.thumbnail);
@@ -357,7 +365,8 @@ module.exports = {
         },
       });
 
-      if (!existingPage) return res.status(404).send({ message: notFoundMessage });
+      if (!existingPage)
+        return res.status(404).send({ message: notFoundMessage });
 
       const translations = await Promise.all(
         pageTranslations.map(async (pageTranslation) => {
@@ -372,9 +381,10 @@ module.exports = {
             });
 
             if (!existingTranslation) {
-              return res
-                .status(404)
-                .send({ message: notFoundMessage, translationId: pageTranslation.id });
+              return res.status(404).send({
+                message: notFoundMessage,
+                translationId: pageTranslation.id,
+              });
             }
           } else {
             const existingTranslation = await prisma.pageTranslation.findFirst({
@@ -415,7 +425,7 @@ module.exports = {
             readTime,
             id: newId,
           };
-        }),
+        })
       );
 
       await Promise.all(
@@ -437,7 +447,7 @@ module.exports = {
             },
             update: translation,
           });
-        }),
+        })
       );
 
       const data = await prisma.page.update({
@@ -466,7 +476,8 @@ module.exports = {
         },
       });
 
-      if (!existingPage) return res.status(404).send({ message: notFoundMessage });
+      if (!existingPage)
+        return res.status(404).send({ message: notFoundMessage });
 
       await prisma.page.delete({
         where: {
