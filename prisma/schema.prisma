@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -90,21 +90,18 @@ enum Gender {
 
 // ---------- CMS ---------- //
 model Page {
-  id              Int      @id @default(autoincrement())
-  slug            String   @unique
-  title           String
-  content         String   @db.Text()
-  readTime        Int      @default(0)
-  metaTitle       String?
-  metaDescription String?  @db.Text()
-  metaKeywords    String?
-  thumbnail       String?
-  banner          String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  // NOTE: I didn't add createdBy and updatedBy to the User model, but you can if you want
-  createdBy       String?
-  updatedBy       String?
+  id        Int      @id @default(autoincrement())
+  slug      String   @unique
+  title     String
+  content   String   @db.Text()
+  readTime  Int      @default(0)
+  thumbnail String?
+  banner    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy String?
+  updatedBy String?
+  seoMeta   SEOMeta?
 
   @@map(name: "page")
 }
@@ -121,21 +118,19 @@ model BlogCategory {
 }
 
 model Blog {
-  id              Int            @id @default(autoincrement())
-  slug            String         @unique
-  title           String
-  content         String         @db.Text()
-  readTime        Int            @default(0)
-  metaTitle       String?
-  metaDescription String?        @db.Text()
-  metaKeywords    String?
-  thumbnail       String?
-  banner          String?
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
-  createdBy       String?
-  updatedBy       String?
-  blogCategories  BlogCategory[] @relation(name: "blogs_on_blog_categories")
+  id             Int            @id @default(autoincrement())
+  slug           String         @unique
+  title          String
+  content        String         @db.Text()
+  readTime       Int            @default(0)
+  thumbnail      String?
+  banner         String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  createdBy      String?
+  updatedBy      String?
+  blogCategories BlogCategory[] @relation(name: "blogs_on_blog_categories")
+  seoMeta        SEOMeta?
 
   @@map(name: "blog")
 }
@@ -148,4 +143,27 @@ model Locale {
   updatedAt DateTime @updatedAt
 
   @@map(name: "locale")
+}
+
+model SEOMeta {
+  id              Int      @id @default(autoincrement())
+  slug            String   @unique
+  title           String
+  content         String   @db.Text()
+  readTime        Int      @default(0)
+  metaTitle       String?
+  metaDescription String?  @db.Text()
+  metaKeywords    String?
+  thumbnail       String?
+  banner          String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  createdBy       String?
+  updatedBy       String?
+  blog            Blog?    @relation(fields: [blogId], references: [id])
+  blogId          Int?     @unique
+  page            Page?    @relation(fields: [pageId], references: [id])
+  pageId          Int?     @unique
+
+  @@map(name: "seo_meta")
 }

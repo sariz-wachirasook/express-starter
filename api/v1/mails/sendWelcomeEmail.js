@@ -1,8 +1,8 @@
-const { mailSupport, appName } = require('../configs/env');
-const sendEmail = require('../configs/nodemailer');
+const { mailSupport, appName } = require('../configs/env')
+const sendEmail = require('../configs/nodemailer')
 
 module.exports = (email, name) => {
-  const subject = `Welcome to ${appName}!`;
+  const subject = `Welcome to ${appName}!`
   const html = `
     <p>Hello ${name},</p>
     <p>Thank you for joining ${appName}! We're excited to have you on board.</p>
@@ -10,7 +10,7 @@ module.exports = (email, name) => {
     <p>We hope you enjoy using ${appName}!</p>
     <p>Best regards,</p>
     <p>The ${appName} Team</p>
-  `;
+  `
 
-  sendEmail(email, subject, html);
-};
+  sendEmail(email, subject, html)
+}

@@ -1,67 +1,67 @@
-const cron = require('cron');
-const { deleteUser, deleteRefreshToken, deleteResetPasswordToken } = require('../commands/users');
+const cron = require('cron')
+const { deleteUser, deleteRefreshToken, deleteResetPasswordToken } = require('../commands/users')
 
 const methods = {
   runEveryMinute: () => {
     const job = new cron.CronJob('0 * * * * *', async () => {
-      console.log('Cron Running every minute', new Date());
+      console.log('Cron Running every minute', new Date())
 
-      await deleteUser();
-      await deleteRefreshToken();
-      await deleteResetPasswordToken();
-    });
+      await deleteUser()
+      await deleteRefreshToken()
+      await deleteResetPasswordToken()
+    })
 
-    job.start();
+    job.start()
   },
 
   runEvery30Minutes: () => {
     const job = new cron.CronJob('*/30 * * * *', () => {
-      console.log('Cron Running every 30 minutes', new Date());
-    });
+      console.log('Cron Running every 30 minutes', new Date())
+    })
 
-    job.start();
+    job.start()
   },
 
   runEveryHour: () => {
     const job = new cron.CronJob('0 * * * *', async () => {
-      console.log('Cron Running every hour', new Date());
-    });
+      console.log('Cron Running every hour', new Date())
+    })
 
-    job.start();
+    job.start()
   },
 
   runEveryDayAtMidnight: () => {
     const job = new cron.CronJob('0 0 0 * * *', async () => {
-      console.log('Cron Running every day at midnight', new Date());
-    });
+      console.log('Cron Running every day at midnight', new Date())
+    })
 
-    job.start();
+    job.start()
   },
 
   runOnFirstDayOfWeek: () => {
     const job = new cron.CronJob('0 0 * * 1', () => {
-      console.log('Cron Running on the first day of the week', new Date());
-    });
+      console.log('Cron Running on the first day of the week', new Date())
+    })
 
-    job.start();
+    job.start()
   },
 
   runOnFirstDayOfMonth: () => {
     const job = new cron.CronJob('0 0 1 * *', () => {
-      console.log('Cron Running on the first day of the month', new Date());
-    });
+      console.log('Cron Running on the first day of the month', new Date())
+    })
 
-    job.start();
+    job.start()
   },
 
   run: () => {
-    methods.runEveryMinute();
-    methods.runEvery30Minutes();
-    methods.runEveryHour();
-    methods.runEveryDayAtMidnight();
-    methods.runOnFirstDayOfWeek();
-    methods.runOnFirstDayOfMonth();
-  },
-};
+    methods.runEveryMinute()
+    methods.runEvery30Minutes()
+    methods.runEveryHour()
+    methods.runEveryDayAtMidnight()
+    methods.runOnFirstDayOfWeek()
+    methods.runOnFirstDayOfMonth()
+  }
+}
 
-module.exports = methods;
+module.exports = methods

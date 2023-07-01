@@ -1,15 +1,15 @@
-const path = require('path');
-const fs = require('fs');
+const path = require('path')
+const fs = require('fs')
 const {
   getPagination,
   monthDayYearFormat,
   getXLSX,
   getCSV,
-  getAverageReadingSpeed,
-} = require('../utils/utils');
-const prisma = require('../configs/prisma');
-const slugify = require('../configs/slugify');
-const { notFoundMessage } = require('../messages/systemMessages');
+  getAverageReadingSpeed
+} = require('../utils/utils')
+const prisma = require('../configs/prisma')
+const slugify = require('../configs/slugify')
+const { notFoundMessage } = require('../messages/systemMessages')
 
 const selectList = {
   select: {
@@ -18,9 +18,9 @@ const selectList = {
     readTime: true,
     thumbnail: true,
     createdAt: true,
-    createdBy: true,
-  },
-};
+    createdBy: true
+  }
+}
 
 const selectDetail = {
   select: {
@@ -36,31 +36,31 @@ const selectDetail = {
     createdAt: true,
     updatedAt: true,
     createdBy: true,
-    updatedBy: true,
-  },
-};
+    updatedBy: true
+  }
+}
 
 module.exports = {
   create: async (req, res, next) => {
     try {
-      const { title, content, slug, metaTitle, metaDescription, metaKeywords } = req.body;
-      const { email } = req.user;
+      const { title, content, slug, metaTitle, metaDescription, metaKeywords } = req.body
+      const { email } = req.user
 
-      if (!title || !content) return res.status(400).send({ message: 'All fields are required' });
+      if (!title || !content) return res.status(400).send({ message: 'All fields are required' })
 
-      let newSlug = slugify(slug || title);
+      let newSlug = slugify(slug || title)
 
       const existingSlug = await prisma.page.findUnique({
         where: {
-          slug: newSlug,
-        },
-      });
+          slug: newSlug
+        }
+      })
 
       if (existingSlug) {
-        newSlug = `${newSlug}-${Date.now()}`;
+        newSlug = `${newSlug}-${Date.now()}`
       }
 
-      const readTime = getAverageReadingSpeed(content);
+      const readTime = getAverageReadingSpeed(content)
 
       const data = await prisma.page.create({
         data: {
@@ -72,86 +72,86 @@ module.exports = {
           readTime,
           metaTitle,
           metaDescription,
-          metaKeywords,
+          metaKeywords
         },
-        ...selectDetail,
-      });
+        ...selectDetail
+      })
 
-      return res.send(data);
+      return res.send(data)
     } catch (err) {
-      return next(err);
+      return next(err)
     }
   },
 
   findMany: async (req, res, next) => {
     try {
-      const pagination = getPagination(req.query);
+      const pagination = getPagination(req.query)
 
-      const total = await prisma.page.count();
+      const total = await prisma.page.count()
       const data = await prisma.page.findMany({
         ...pagination,
         orderBy: {
-          createdAt: 'desc',
+          createdAt: 'desc'
         },
-        ...selectList,
-      });
+        ...selectList
+      })
 
-      res.send({ total, data });
+      res.send({ total, data })
     } catch (err) {
-      next(err);
+      next(err)
     }
   },
 
   findUnique: async (req, res, next) => {
     try {
-      const { slug } = req.params;
+      const { slug } = req.params
 
       const data = await prisma.page.findUnique({
         where: {
-          slug,
+          slug
         },
-        ...selectDetail,
-      });
+        ...selectDetail
+      })
 
-      if (!data) return res.status(404).send({ message: notFoundMessage });
+      if (!data) return res.status(404).send({ message: notFoundMessage })
 
-      return res.send(data);
+      return res.send(data)
     } catch (err) {
-      return next(err);
+      return next(err)
     }
   },
 
   hasResource: async (req, res, next) => {
     try {
-      const { slug } = req.params;
+      const { slug } = req.params
 
       const data = await prisma.page.findUnique({
         where: {
-          slug,
+          slug
         },
         select: {
-          slug: true,
-        },
-      });
+          slug: true
+        }
+      })
 
-      if (!data) return res.status(404).send({ message: notFoundMessage });
+      if (!data) return res.status(404).send({ message: notFoundMessage })
 
-      return next();
+      return next()
     } catch (err) {
-      return next(err);
+      return next(err)
     }
   },
 
   dataExport: async (req, res, next) => {
     try {
-      const { format } = req.query;
+      const { format } = req.query
 
       const data = await prisma.page.findMany({
         orderBy: {
-          createdAt: 'desc',
+          createdAt: 'desc'
         },
-        ...selectDetail,
-      });
+        ...selectDetail
+      })
 
       const flattenedData = data.map((item) => ({
         slug: item.slug,
@@ -164,8 +164,8 @@ module.exports = {
         createdAt: monthDayYearFormat(item.createdAt),
         createdBy: item.createdBy,
         updatedAt: monthDayYearFormat(item.updatedAt),
-        updatedBy: item.updatedBy,
-      }));
+        updatedBy: item.updatedBy
+      }))
 
       switch (format) {
         case 'xlsx': {
@@ -180,15 +180,15 @@ module.exports = {
             'Created At',
             'Created By',
             'Updated At',
-            'Updated By',
-          ]);
+            'Updated By'
+          ])
           res.setHeader(
             'Content-Type',
-            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-          );
-          res.setHeader('Content-Disposition', 'attachment; filename=pages.xlsx');
-          res.send(workbook);
-          break;
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+          )
+          res.setHeader('Content-Disposition', 'attachment; filename=pages.xlsx')
+          res.send(workbook)
+          break
         }
         case 'csv':
         default: {
@@ -203,122 +203,122 @@ module.exports = {
             { id: 'createdAt', title: 'Created At' },
             { id: 'createdBy', title: 'Created By' },
             { id: 'updatedAt', title: 'Updated At' },
-            { id: 'updatedBy', title: 'Updated By' },
-          ]);
-          res.setHeader('Content-Disposition', 'attachment; filename=pages.csv');
-          res.setHeader('Content-Type', 'text/csv');
-          res.send(csv);
-          break;
+            { id: 'updatedBy', title: 'Updated By' }
+          ])
+          res.setHeader('Content-Disposition', 'attachment; filename=pages.csv')
+          res.setHeader('Content-Type', 'text/csv')
+          res.send(csv)
+          break
         }
       }
     } catch (err) {
-      next(err);
+      next(err)
     }
   },
 
   uploadBanner: async (req, res, next) => {
     try {
-      const { slug } = req.params;
-      const { file } = req;
+      const { slug } = req.params
+      const { file } = req
 
-      if (!file) return res.status(400).send({ message: 'File is required' });
+      if (!file) return res.status(400).send({ message: 'File is required' })
 
       const existingPage = await prisma.page.findUnique({
         where: {
-          slug,
+          slug
         },
         select: {
-          banner: true,
-        },
-      });
+          banner: true
+        }
+      })
 
-      if (!existingPage) return res.status(404).send({ message: notFoundMessage });
+      if (!existingPage) return res.status(404).send({ message: notFoundMessage })
 
       if (existingPage.banner) {
-        const filePath = path.join('public', existingPage.banner);
-        if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+        const filePath = path.join('public', existingPage.banner)
+        if (fs.existsSync(filePath)) fs.unlinkSync(filePath)
       }
 
       const data = await prisma.page.update({
         where: {
-          slug,
+          slug
         },
         data: {
-          banner: file.path,
+          banner: file.path
         },
         select: {
-          banner: true,
-        },
-      });
+          banner: true
+        }
+      })
 
-      return res.send(data);
+      return res.send(data)
     } catch (err) {
-      return next(err);
+      return next(err)
     }
   },
 
   uploadThumbnail: async (req, res, next) => {
     try {
-      const { slug } = req.params;
-      const { file } = req;
+      const { slug } = req.params
+      const { file } = req
 
-      if (!file) return res.status(400).send({ message: 'File is required' });
+      if (!file) return res.status(400).send({ message: 'File is required' })
 
       const existingPage = await prisma.page.findUnique({
         where: {
-          slug,
+          slug
         },
         select: {
-          thumbnail: true,
-        },
-      });
+          thumbnail: true
+        }
+      })
 
-      if (!existingPage) return res.status(404).send({ message: notFoundMessage });
+      if (!existingPage) return res.status(404).send({ message: notFoundMessage })
 
       if (existingPage.thumbnail) {
-        const filePath = path.join('public', existingPage.thumbnail);
-        if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+        const filePath = path.join('public', existingPage.thumbnail)
+        if (fs.existsSync(filePath)) fs.unlinkSync(filePath)
       }
 
       const data = await prisma.page.update({
         where: {
-          slug,
+          slug
         },
         data: {
-          thumbnail: file.path,
+          thumbnail: file.path
         },
         select: {
-          thumbnail: true,
-        },
-      });
+          thumbnail: true
+        }
+      })
 
-      return res.send(data);
+      return res.send(data)
     } catch (err) {
-      return next(err);
+      return next(err)
     }
   },
 
   update: async (req, res, next) => {
     try {
-      const { slug } = req.params;
-      const { title, content, metaTitle, metaDescription } = req.body;
-      const { email } = req.user;
+      const { slug } = req.params
+      const { title, content, metaTitle, metaDescription } = req.body
+      const { email } = req.user
 
-      if (!title || !content) return res.status(400).send({ message: 'All fields are required' });
+      if (!title || !content) return res.status(400).send({ message: 'All fields are required' })
 
       const existingPage = await prisma.page.findUnique({
         where: {
-          slug,
-        },
-      });
+          slug
+        }
+      })
 
-      if (!existingPage) return res.status(404).send({ message: notFoundMessage });
+      if (!existingPage) return res.status(404).send({ message: notFoundMessage })
 
-      const readTime = getAverageReadingSpeed(content);
+      const readTime = getAverageReadingSpeed(content)
 
       const data = await prisma.page.update({
         where: {
-          slug,
+          slug
         },
         data: {
           title,
@@ -326,38 +326,38 @@ module.exports = {
           readTime,
           metaTitle,
           metaDescription,
-          updatedBy: email,
+          updatedBy: email
         },
-        ...selectDetail,
-      });
+        ...selectDetail
+      })
 
-      return res.send(data);
+      return res.send(data)
     } catch (err) {
-      return next(err);
+      return next(err)
     }
   },
 
   delete: async (req, res, next) => {
     try {
-      const { slug } = req.params;
+      const { slug } = req.params
 
       const existingPage = await prisma.page.findUnique({
         where: {
-          slug,
-        },
-      });
+          slug
+        }
+      })
 
-      if (!existingPage) return res.status(404).send({ message: notFoundMessage });
+      if (!existingPage) return res.status(404).send({ message: notFoundMessage })
 
       await prisma.page.delete({
         where: {
-          slug,
-        },
-      });
+          slug
+        }
+      })
 
-      return res.send({ message: 'Page deleted' });
+      return res.send({ message: 'Page deleted' })
     } catch (err) {
-      return next(err);
+      return next(err)
     }
-  },
-};
+  }
+}

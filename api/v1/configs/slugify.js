@@ -1,11 +1,11 @@
-const slugify = require('slugify');
+const slugify = require('slugify')
 
 module.exports = (slug) => {
   const newSlug = slugify(slug, {
     replacement: '-',
     remove: /[*+~.()'"!:@\\/]/g,
-    lower: true,
-  });
+    lower: true
+  })
 
-  return newSlug;
-};
+  return newSlug
+}

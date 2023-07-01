@@ -1,15 +1,16 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require('fs')
+const path = require('path')
 const {
   getPagination,
   monthDayYearFormat,
   getXLSX,
   getCSV,
-  getAverageReadingSpeed,
-} = require('../utils/utils');
-const prisma = require('../configs/prisma');
-const slugify = require('../configs/slugify');
-const { notFoundMessage } = require('../messages/systemMessages');
+  getAverageReadingSpeed
+} = require('../utils/utils')
+const prisma = require('../configs/prisma')
+const slugify = require('../configs/slugify')
+const { notFoundMessage } = require('../messages/systemMessages')
+const blogService = require('../services/blogs')
 
 const selectList = {
   select: {
@@ -21,11 +22,11 @@ const selectList = {
     blogCategories: {
       select: {
         name: true,
-        slug: true,
-      },
-    },
-  },
-};
+        slug: true
+      }
+    }
+  }
+}
 
 const selectDetail = {
   select: {
@@ -43,34 +44,28 @@ const selectDetail = {
     blogCategories: {
       select: {
         name: true,
-        slug: true,
-      },
-    },
-  },
-};
+        slug: true
+      }
+    }
+  }
+}
 
 module.exports = {
   create: async (req, res, next) => {
     try {
-      const { title, content, slug, metaTitle, metaDescription, metaKeywords } = req.body;
-      const { blogCategories } = req.body;
-      const { email } = req.user;
+      const { title, content, slug, metaTitle, metaDescription, metaKeywords } = req.body
+      const { blogCategories } = req.body
+      const { email } = req.user
 
-      if (!title || !content) return res.status(400).send({ message: 'All fields are required' });
+      if (!title || !content) return res.status(400).send({ message: 'All fields are required' })
 
-      let newSlug = slugify(slug || title);
+      let newSlug = slugify(slug || title)
 
-      const existingSlug = await prisma.blog.findUnique({
-        where: {
-          slug: newSlug,
-        },
-      });
+      const existingSlug = await blogService.findOneBySlug(newSlug)
+      console.log(existingSlug)
+      if (existingSlug) newSlug = `${newSlug}-${Date.now()}`
 
-      if (existingSlug) {
-        newSlug = `${newSlug}-${Date.now()}`;
-      }
-
-      const readTime = getAverageReadingSpeed(content);
+      const readTime = getAverageReadingSpeed(content)
 
       const data = await prisma.blog.create({
         data: {
@@ -84,169 +79,169 @@ module.exports = {
           metaDescription,
           metaKeywords,
           blogCategories: {
-            connect: blogCategories.map((item) => ({ slug: item })),
-          },
+            connect: blogCategories.map((item) => ({ slug: item }))
+          }
         },
-        ...selectDetail,
-      });
+        ...selectDetail
+      })
 
-      return res.send(data);
+      return res.send(data)
     } catch (err) {
-      return next(err);
+      return next(err)
     }
   },
 
   findMany: async (req, res, next) => {
     try {
-      const pagination = getPagination(req.query);
+      const pagination = getPagination(req.query)
 
-      const total = await prisma.blog.count();
+      const total = await prisma.blog.count()
       const data = await prisma.blog.findMany({
         ...pagination,
         orderBy: {
-          createdAt: 'desc',
+          createdAt: 'desc'
         },
-        ...selectList,
-      });
+        ...selectList
+      })
 
-      res.send({ total, data });
+      res.send({ total, data })
     } catch (err) {
-      next(err);
+      next(err)
     }
   },
 
   findUnique: async (req, res, next) => {
     try {
-      const { slug } = req.params;
+      const { slug } = req.params
 
       const data = await prisma.blog.findUnique({
         where: {
-          slug,
+          slug
         },
-        ...selectDetail,
-      });
+        ...selectDetail
+      })
 
-      if (!data) return res.status(404).send({ message: notFoundMessage });
+      if (!data) return res.status(404).send({ message: notFoundMessage })
 
-      return res.send(data);
+      return res.send(data)
     } catch (err) {
-      return next(err);
+      return next(err)
     }
   },
 
   hasResource: async (req, res, next) => {
     try {
-      const { slug } = req.params;
+      const { slug } = req.params
 
       const data = await prisma.blog.findUnique({
         where: {
-          slug,
+          slug
         },
         select: {
-          slug: true,
-        },
-      });
+          slug: true
+        }
+      })
 
-      if (!data) return res.status(404).send({ message: notFoundMessage });
+      if (!data) return res.status(404).send({ message: notFoundMessage })
 
-      return next();
+      return next()
     } catch (err) {
-      return next(err);
+      return next(err)
     }
   },
 
   uploadBanner: async (req, res, next) => {
     try {
-      const { slug } = req.params;
-      const { file } = req;
+      const { slug } = req.params
+      const { file } = req
 
-      if (!file) return res.status(400).send({ message: 'File is required' });
+      if (!file) return res.status(400).send({ message: 'File is required' })
 
       const existingBlog = await prisma.blog.findUnique({
         where: {
-          slug,
+          slug
         },
         select: {
-          banner: true,
-        },
-      });
+          banner: true
+        }
+      })
 
-      if (!existingBlog) return res.status(404).send({ message: notFoundMessage });
+      if (!existingBlog) return res.status(404).send({ message: notFoundMessage })
 
       if (existingBlog.banner) {
-        const filePath = path.join('public', existingBlog.banner);
-        if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+        const filePath = path.join('public', existingBlog.banner)
+        if (fs.existsSync(filePath)) fs.unlinkSync(filePath)
       }
 
       const data = await prisma.blog.update({
         where: {
-          slug,
+          slug
         },
         data: {
-          banner: file.path,
+          banner: file.path
         },
         select: {
-          banner: true,
-        },
-      });
+          banner: true
+        }
+      })
 
-      return res.send(data);
+      return res.send(data)
     } catch (err) {
-      return next(err);
+      return next(err)
     }
   },
 
   uploadThumbnail: async (req, res, next) => {
     try {
-      const { slug } = req.params;
-      const { file } = req;
+      const { slug } = req.params
+      const { file } = req
 
-      if (!file) return res.status(400).send({ message: 'File is required' });
+      if (!file) return res.status(400).send({ message: 'File is required' })
 
       const existingBlog = await prisma.blog.findUnique({
         where: {
-          slug,
+          slug
         },
         select: {
-          thumbnail: true,
-        },
-      });
+          thumbnail: true
+        }
+      })
 
-      if (!existingBlog) return res.status(404).send({ message: notFoundMessage });
+      if (!existingBlog) return res.status(404).send({ message: notFoundMessage })
 
       if (existingBlog.thumbnail) {
-        const filePath = path.join('public', existingBlog.thumbnail);
-        if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+        const filePath = path.join('public', existingBlog.thumbnail)
+        if (fs.existsSync(filePath)) fs.unlinkSync(filePath)
       }
 
       const data = await prisma.blog.update({
         where: {
-          slug,
+          slug
         },
         data: {
-          thumbnail: file.path,
+          thumbnail: file.path
         },
         select: {
-          thumbnail: true,
-        },
-      });
+          thumbnail: true
+        }
+      })
 
-      return res.send(data);
+      return res.send(data)
     } catch (err) {
-      return next(err);
+      return next(err)
     }
   },
 
   dataExport: async (req, res, next) => {
     try {
-      const { format } = req.query;
+      const { format } = req.query
 
       const data = await prisma.blog.findMany({
         orderBy: {
-          createdAt: 'desc',
+          createdAt: 'desc'
         },
-        ...selectDetail,
-      });
+        ...selectDetail
+      })
 
       const flattenedData = data.map((item) => ({
         slug: item.slug,
@@ -260,8 +255,8 @@ module.exports = {
         createdAt: monthDayYearFormat(item.createdAt),
         createdBy: item.createdBy,
         updatedAt: monthDayYearFormat(item.updatedAt),
-        updatedBy: item.updatedBy,
-      }));
+        updatedBy: item.updatedBy
+      }))
 
       switch (format) {
         case 'xlsx': {
@@ -277,15 +272,15 @@ module.exports = {
             'Created At',
             'Created By',
             'Updated At',
-            'Updated By',
-          ]);
+            'Updated By'
+          ])
           res.setHeader(
             'Content-Type',
-            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-          );
-          res.setHeader('Content-Disposition', 'attachment; filename=blogs.xlsx');
-          res.send(workbook);
-          break;
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+          )
+          res.setHeader('Content-Disposition', 'attachment; filename=blogs.xlsx')
+          res.send(workbook)
+          break
         }
         case 'csv':
         default: {
@@ -301,40 +296,40 @@ module.exports = {
             { id: 'createdAt', title: 'Created At' },
             { id: 'createdBy', title: 'Created By' },
             { id: 'updatedAt', title: 'Updated At' },
-            { id: 'updatedBy', title: 'Updated By' },
-          ]);
-          res.setHeader('Content-Disposition', 'attachment; filename=blogs.csv');
-          res.setHeader('Content-Type', 'text/csv');
-          res.send(csv);
-          break;
+            { id: 'updatedBy', title: 'Updated By' }
+          ])
+          res.setHeader('Content-Disposition', 'attachment; filename=blogs.csv')
+          res.setHeader('Content-Type', 'text/csv')
+          res.send(csv)
+          break
         }
       }
     } catch (err) {
-      next(err);
+      next(err)
     }
   },
 
   update: async (req, res, next) => {
     try {
-      const { slug } = req.params;
-      const { title, content, metaTitle, metaDescription, metaKeywords, blogCategories } = req.body;
-      const { email } = req.user;
+      const { slug } = req.params
+      const { title, content, metaTitle, metaDescription, metaKeywords, blogCategories } = req.body
+      const { email } = req.user
 
-      if (!title || !content) return res.status(400).send({ message: 'All fields are required' });
+      if (!title || !content) return res.status(400).send({ message: 'All fields are required' })
 
       const existingBlog = await prisma.blog.findUnique({
         where: {
-          slug,
-        },
-      });
+          slug
+        }
+      })
 
-      if (!existingBlog) return res.status(404).send({ message: notFoundMessage });
+      if (!existingBlog) return res.status(404).send({ message: notFoundMessage })
 
-      const readTime = getAverageReadingSpeed(content);
+      const readTime = getAverageReadingSpeed(content)
 
       const data = await prisma.blog.update({
         where: {
-          slug,
+          slug
         },
         data: {
           title,
@@ -345,39 +340,39 @@ module.exports = {
           metaKeywords,
           updatedBy: email,
           blogCategories: {
-            set: blogCategories.map((item) => ({ slug: item })),
-          },
+            set: blogCategories.map((item) => ({ slug: item }))
+          }
         },
-        ...selectDetail,
-      });
+        ...selectDetail
+      })
 
-      return res.send(data);
+      return res.send(data)
     } catch (err) {
-      return next(err);
+      return next(err)
     }
   },
 
   delete: async (req, res, next) => {
     try {
-      const { slug } = req.params;
+      const { slug } = req.params
 
       const existingBlog = await prisma.blog.findUnique({
         where: {
-          slug,
-        },
-      });
+          slug
+        }
+      })
 
-      if (!existingBlog) return res.status(404).send({ message: notFoundMessage });
+      if (!existingBlog) return res.status(404).send({ message: notFoundMessage })
 
       await prisma.blog.delete({
         where: {
-          slug,
-        },
-      });
+          slug
+        }
+      })
 
-      return res.send({ message: 'Page deleted' });
+      return res.send({ message: 'Page deleted' })
     } catch (err) {
-      return next(err);
+      return next(err)
     }
-  },
-};
+  }
+}

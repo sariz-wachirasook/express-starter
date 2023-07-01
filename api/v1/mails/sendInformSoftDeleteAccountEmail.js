@@ -1,9 +1,9 @@
-const { appName } = require('../configs/env');
-const sendEmail = require('../configs/nodemailer');
-const { monthDayYearFormat } = require('../utils/utils');
+const { appName } = require('../configs/env')
+const sendEmail = require('../configs/nodemailer')
+const { monthDayYearFormat } = require('../utils/utils')
 
 module.exports = (email, name, next30Day) => {
-  const subject = 'Account Delete Request';
+  const subject = 'Account Delete Request'
 
   const html = `
     <p>Hello ${name},</p>
@@ -13,7 +13,7 @@ module.exports = (email, name, next30Day) => {
     <p>Thank you for using ${appName}.</p>
     <p>Best regards,</p>
     <p>${appName} Team</p>
-  `;
+  `
 
-  sendEmail(email, subject, html);
-};
+  sendEmail(email, subject, html)
+}

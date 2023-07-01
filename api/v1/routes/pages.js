@@ -1,6 +1,6 @@
-const router = require('express').Router();
-const upload = require('../configs/multer');
-const sharp = require('../configs/sharp');
+const router = require('express').Router()
+const upload = require('../configs/multer')
+const sharp = require('../configs/sharp')
 const {
   findMany,
   create,
@@ -10,18 +10,18 @@ const {
   delete: dele,
   uploadBanner,
   uploadThumbnail,
-  hasResource,
-} = require('../controllers/pages');
-const authMiddleware = require('../middleware/authMiddleware');
-const errorHandler = require('../middleware/errorHandler');
-const roleMiddleware = require('../middleware/roleMiddleware');
+  hasResource
+} = require('../controllers/pages')
+const authMiddleware = require('../middleware/authMiddleware')
+const errorHandler = require('../middleware/errorHandler')
+const roleMiddleware = require('../middleware/roleMiddleware')
 
-router.get('/', findMany, errorHandler);
-router.post('/', authMiddleware, roleMiddleware('ADMINISTRATOR'), create, errorHandler);
-router.get('/export', dataExport, errorHandler);
-router.get('/:slug', findUnique, errorHandler);
-router.patch('/:slug', authMiddleware, roleMiddleware('ADMINISTRATOR'), update, errorHandler);
-router.delete('/:slug', authMiddleware, roleMiddleware('ADMINISTRATOR'), dele, errorHandler);
+router.get('/', findMany, errorHandler)
+router.post('/', authMiddleware, roleMiddleware('ADMINISTRATOR'), create, errorHandler)
+router.get('/export', dataExport, errorHandler)
+router.get('/:slug', findUnique, errorHandler)
+router.patch('/:slug', authMiddleware, roleMiddleware('ADMINISTRATOR'), update, errorHandler)
+router.delete('/:slug', authMiddleware, roleMiddleware('ADMINISTRATOR'), dele, errorHandler)
 router.post(
   '/:slug/upload-banner',
   authMiddleware,
@@ -30,8 +30,8 @@ router.post(
   upload.single('file'),
   sharp,
   uploadBanner,
-  errorHandler,
-);
+  errorHandler
+)
 
 router.post(
   '/:slug/upload-thumbnail',
@@ -41,7 +41,7 @@ router.post(
   upload.single('file'),
   sharp,
   uploadThumbnail,
-  errorHandler,
-);
+  errorHandler
+)
 
-module.exports = router;
+module.exports = router
