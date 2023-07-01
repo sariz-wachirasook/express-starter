@@ -48,7 +48,9 @@ module.exports = {
         },
         create: {
           token: refreshToken,
-          expiresAt: new Date(date.setDate(date.getDate() + parseInt(JWTRefreshTokenExpires, 10))),
+          expiresAt: new Date(
+            date.setDate(date.getDate() + parseInt(JWTRefreshTokenExpires, 10))
+          ),
           user: {
             connect: {
               id: user.id

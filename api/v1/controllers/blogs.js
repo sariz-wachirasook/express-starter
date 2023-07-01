@@ -240,7 +240,9 @@ module.exports = {
       const flattenedData = data.map((item) => ({
         slug: item.slug,
         title: item.title,
-        blogCategories: item.blogCategories.map((category) => category.name).join(', '),
+        blogCategories: item.blogCategories
+          .map((category) => category.name)
+          .join(', '),
         content: item.content,
         readTime: item.readTime,
         metaTitle: item.metaTitle,
