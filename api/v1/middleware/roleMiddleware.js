@@ -6,7 +6,7 @@ const roles = {
   USER: ['USER'] // user can access user routes
 }
 
-function roleMiddleware (role) {
+function roleMiddleware(role) {
   return (req, res, next) => {
     const { user } = req
     if (!user) return res.status(401).send({ message: 'Unauthorized' })

@@ -13,7 +13,8 @@
     "husky:prepare": "husky install",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "update:package": "ncu -u && pnpm install"
+    "update:package": "ncu -u && pnpm install",
+    "pretty": "prettier --write \"**/**/**/*.{js,jsx,ts,tsx,json,md}\""
   },
   "devDependencies": {
     "@types/express": "^4.17.17",
@@ -23,6 +24,7 @@
     "nodemon": "^2.0.20",
     "npm-check-updates": "^16.6.2",
     "pm2": "^5.2.2",
+    "prettier": "^2.8.8",
     "prisma": "^4.16.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"

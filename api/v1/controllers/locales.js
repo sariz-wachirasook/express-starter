@@ -1,11 +1,6 @@
 const { getPagination, getId } = require('../utils/utils')
 const prisma = require('../configs/prisma')
-const {
-  notFoundMessage,
-  allFieldsRequired,
-  deleteSuccess,
-  codeAlreadyExists
-} = require('../messages/systemMessages')
+const { notFoundMessage, allFieldsRequired, deleteSuccess, codeAlreadyExists } = require('../messages/systemMessages')
 
 const selectList = {
   select: {

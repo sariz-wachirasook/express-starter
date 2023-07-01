@@ -137,16 +137,8 @@ module.exports = {
 
       switch (format) {
         case 'xlsx': {
-          const workbook = getXLSX(flattenedData, [
-            'Email',
-            'Name',
-            'Created At',
-            'Subscribed to Newsletter'
-          ])
-          res.setHeader(
-            'Content-Type',
-            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-          )
+          const workbook = getXLSX(flattenedData, ['Email', 'Name', 'Created At', 'Subscribed to Newsletter'])
+          res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
           res.setHeader('Content-Disposition', 'attachment; filename=users.xlsx')
           res.send(workbook)
           break

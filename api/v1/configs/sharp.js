@@ -10,10 +10,7 @@ module.exports = async (req, res, next) => {
 
     const randomName = crypto.randomBytes(8).toString('hex')
 
-    const hashFolder = `media/${randomName.split('').slice(0, 2).join('')}/${randomName
-      .split('')
-      .slice(2, 4)
-      .join('')}`
+    const hashFolder = `media/${randomName.split('').slice(0, 2).join('')}/${randomName.split('').slice(2, 4).join('')}`
 
     if (!fs.existsSync(`public/${hashFolder}`)) {
       fs.mkdirSync(`public/${hashFolder}`, { recursive: true })

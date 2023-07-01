@@ -76,6 +76,7 @@ pnpm dev
 ## Where can be deployed?
 
 - [x] Any VPS (Linux) with
+
   - Node.js
   - PM2
   - Nginx
@@ -89,4 +90,3 @@ pnpm dev
   - [x] Google Cloud
   - [x] Linode
   - [x] Netlify
-  

@@ -1,11 +1,5 @@
 const router = require('express').Router()
-const {
-  findMany,
-  create,
-  findUnique,
-  update,
-  delete: dele
-} = require('../controllers/blogCategories')
+const { findMany, create, findUnique, update, delete: dele } = require('../controllers/blogCategories')
 const authMiddleware = require('../middleware/authMiddleware')
 const errorHandler = require('../middleware/errorHandler')
 const roleMiddleware = require('../middleware/roleMiddleware')

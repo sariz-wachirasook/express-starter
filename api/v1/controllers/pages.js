@@ -1,12 +1,6 @@
 const path = require('path')
 const fs = require('fs')
-const {
-  getPagination,
-  monthDayYearFormat,
-  getXLSX,
-  getCSV,
-  getAverageReadingSpeed
-} = require('../utils/utils')
+const { getPagination, monthDayYearFormat, getXLSX, getCSV, getAverageReadingSpeed } = require('../utils/utils')
 const prisma = require('../configs/prisma')
 const slugify = require('../configs/slugify')
 const { notFoundMessage } = require('../messages/systemMessages')
@@ -182,10 +176,7 @@ module.exports = {
             'Updated At',
             'Updated By'
           ])
-          res.setHeader(
-            'Content-Type',
-            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-          )
+          res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
           res.setHeader('Content-Disposition', 'attachment; filename=pages.xlsx')
           res.send(workbook)
           break
