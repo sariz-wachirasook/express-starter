@@ -21,8 +21,6 @@ module.exports = {
         }
       })
 
-      console.log(user)
-
       if (!user) res.status(401).send({ message: 'Invalid email or password' })
 
       const isPasswordValid = await bcrypt.compare(password, user.password)

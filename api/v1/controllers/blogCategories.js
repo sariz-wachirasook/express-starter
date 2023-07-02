@@ -1,4 +1,4 @@
-const { getPagination, getId } = require('../utils/utils')
+const { getPagination, getId, getSlug } = require('../utils/utils')
 const prisma = require('../configs/prisma')
 const slugify = require('../configs/slugify')
 const blogCategoryService = require('../services/blogCategories')
@@ -6,7 +6,6 @@ const { notFoundMessage, slugAlreadyExists, allFieldsRequired, deleteSuccess } =
 
 const selectList = {
   select: {
-    id: true,
     slug: true,
     name: true
   }
@@ -14,7 +13,6 @@ const selectList = {
 
 const selectDetail = {
   select: {
-    id: true,
     slug: true,
     name: true,
     createdAt: true,
@@ -67,11 +65,11 @@ module.exports = {
 
   findUnique: async (req, res, next) => {
     try {
-      const id = getId(req.params)
+      const slug = getSlug(req.params)
 
       const data = await prisma.blogCategory.findUnique({
         where: {
-          id
+          slug
         },
         ...selectDetail
       })
@@ -86,7 +84,7 @@ module.exports = {
 
   update: async (req, res, next) => {
     try {
-      const id = getId(req.params)
+      const slug = getSlug(req.params)
       const { name } = req.body
 
       if (!name) return res.status(400).send({ message: allFieldsRequired })
@@ -95,7 +93,7 @@ module.exports = {
 
       const existingSlug = await prisma.blogCategory.findUnique({
         where: {
-          id
+          slug
         },
         ...selectDetail
       })
@@ -115,7 +113,7 @@ module.exports = {
 
       const data = await prisma.blogCategory.update({
         where: {
-          id
+          slug
         },
         data: {
           name,
@@ -132,11 +130,11 @@ module.exports = {
 
   delete: async (req, res, next) => {
     try {
-      const id = getId(req.params)
+      const slug = getSlug(req.params)
 
       const existingSlug = await prisma.blogCategory.findUnique({
         where: {
-          id
+          slug
         }
       })
 
@@ -144,7 +142,7 @@ module.exports = {
 
       await prisma.blogCategory.delete({
         where: {
-          id
+          slug
         }
       })
 

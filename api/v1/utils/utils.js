@@ -9,6 +9,13 @@ module.exports = {
     return idInt
   },
 
+  getSlug: ({ slug = '' }) => {
+    return slug
+      .toLowerCase()
+      .replace(/[^\w ]+/g, '')
+      .replace(/ +/g, '-')
+  },
+
   getPagination: ({ page = 1, perPage = 10 }) => ({
     skip: parseInt((page - 1) * perPage, 10) || 0,
     take: parseInt(perPage, 10) || 10

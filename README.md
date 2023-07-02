@@ -1,6 +1,6 @@
 # All About The Starter Kit
 
-## Node.js + Express + Prisma + MySQL
+## Node.js + Express + Prisma + PostgreSQL|MySQL|SQLite
 
 ---
 
